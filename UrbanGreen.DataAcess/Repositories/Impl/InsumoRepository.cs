@@ -12,4 +12,9 @@ public class InsumoRepository : BaseRepository<Insumo>, IInsumoRepository
     {
         return await _dbSet.Skip(skip).Take(take).ToListAsync();
     }
+
+    public async Task<Insumo> ConsultarInsumoPorID(int id)
+    {
+        return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+    }
 }

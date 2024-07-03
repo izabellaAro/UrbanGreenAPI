@@ -1,26 +1,66 @@
-﻿using UrbanGreenAPI.Application.Models;
+﻿using UrbanGreen.DataAcess.Repositories;
+using UrbanGreenAPI.Application.Models;
+using UrbanGreenAPI.Core.Entities;
 
 namespace UrbanGreenAPI.Application.Services.Impl;
 
 public class InsumoService : IInsumoService
 {
-    public Task<bool> AtualizarInsumo(int id, UpdateInsumoDto insumoDto)
+    private readonly IInsumoRepository _insumoRepository;
+
+    public InsumoService(IInsumoRepository insumoRepository)
     {
-        throw new NotImplementedException();
+        _insumoRepository = insumoRepository;
     }
 
-    public Task CadastrarInsumo(CreateInsumoDto insumoDto)
+    public async Task<bool> AtualizarInsumo(int id, UpdateInsumoDto insumoDto)
     {
-        throw new NotImplementedException();
+        var insumo = await _insumoRepository.ConsultarInsumoPorID(id);
+        if (insumo == null) return false;
+        insumo.Update(insumoDto.Nome, insumoDto.Quantidade, insumoDto.Valor);
+        await _insumoRepository.UpdateAsync(insumo);
+        return true;
     }
 
-    public Task<IEnumerable<ReadInsumoDto>> ConsultarInsumos(int skip = 0, int take = 20)
+    public async Task CadastrarInsumo(CreateInsumoDto insumoDto)
     {
-        throw new NotImplementedException();
+        var insumo = new Insumo(insumoDto.Nome, insumoDto.Quantidade, insumoDto.Valor);
+        await _insumoRepository.AddAsync(insumo);
     }
 
-    public Task<bool> DeletarInsumo(int id)
+    public async Task<IEnumerable<ReadInsumoDto>> ConsultarInsumos(int skip = 0, int take = 20)
     {
-        throw new NotImplementedException();
+        var consultaInsumo = await _insumoRepository.ConsultarInsumos(skip, take);
+
+        return consultaInsumo.Select(insumo => new ReadInsumoDto
+        {
+            Id = insumo.Id,
+            Nome = insumo.Nome,
+            Quantidade = insumo.Quantidade,
+            Valor = insumo.Valor
+        }).ToList();
+    }
+
+    public async Task<ReadInsumoDto> ConsultarInsumoPorID(int id)
+    {
+        var insumoID = await _insumoRepository.ConsultarInsumoPorID(id);
+
+        if (insumoID == null) return null;
+
+        return new ReadInsumoDto
+        {
+            Id = insumoID.Id,
+            Nome = insumoID.Nome,
+            Quantidade = insumoID.Quantidade,
+            Valor = insumoID.Valor
+        };
+    }
+
+    public async Task<bool> DeletarInsumo(int id)
+    {
+        var insumo = await _insumoRepository.ConsultarInsumoPorID(id);
+        if (insumo == null) return false;
+        await _insumoRepository.DeleteAsync(insumo);
+        return true;
     }
 }
