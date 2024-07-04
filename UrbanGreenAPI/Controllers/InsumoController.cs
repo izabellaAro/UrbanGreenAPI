@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UrbanGreen.Application.Interface;
 using UrbanGreenAPI.Application.Models;
-using UrbanGreenAPI.Application.Services;
 
 namespace UrbanGreenAPI.Controllers;
 

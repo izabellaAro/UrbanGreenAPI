@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using UrbanGreen.Application.Interface;
+using UrbanGreen.Application.Services.Impl;
+using UrbanGreen.DataAcess.Interface;
 using UrbanGreen.DataAcess.Persistence;
-using UrbanGreen.DataAcess.Repositories;
 using UrbanGreen.DataAcess.Repositories.Impl;
-using UrbanGreenAPI.Application.Services;
 using UrbanGreenAPI.Application.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +12,10 @@ var connectionString = builder.Configuration.GetConnectionString("ConnectionDB")
 builder.Services.AddDbContext<DataContext>(opts => opts.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IInsumoRepository, InsumoRepository>();
+builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();
 
 builder.Services.AddScoped<IInsumoService, InsumoService>();
+builder.Services.AddScoped<IFornecedorService, FornecedorService>();
 
 builder.Services.AddControllers();
 

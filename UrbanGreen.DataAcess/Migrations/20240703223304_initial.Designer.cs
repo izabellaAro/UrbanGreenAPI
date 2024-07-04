@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UrbanGreen.DataAcess.Persistence;
 
@@ -10,9 +11,11 @@ using UrbanGreen.DataAcess.Persistence;
 namespace UrbanGreenAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240703223304_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,29 +23,6 @@ namespace UrbanGreenAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("UrbanGreen.Core.Entities.Fornecedor", b =>
-                {
-                    b.Property<int>("FornecedorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FornecedorId"));
-
-                    b.Property<string>("Cnpj")
-                        .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("nchar(14)")
-                        .IsFixedLength();
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("FornecedorId");
-
-                    b.ToTable("Fornecedor");
-                });
 
             modelBuilder.Entity("UrbanGreenAPI.Core.Entities.Insumo", b =>
                 {

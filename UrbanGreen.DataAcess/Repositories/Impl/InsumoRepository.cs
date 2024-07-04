@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using UrbanGreen.DataAcess.Interface;
 using UrbanGreen.DataAcess.Persistence;
 using UrbanGreenAPI.Core.Entities;
 

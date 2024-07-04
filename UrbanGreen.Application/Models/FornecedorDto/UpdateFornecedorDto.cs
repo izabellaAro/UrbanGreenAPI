@@ -9,7 +9,6 @@ namespace UrbanGreen.Application.Models.FornecedorDto
 {
     public class UpdateFornecedorDto
     {
-        public int FornecedorId { get; set; }
         [Required(ErrorMessage = "O nome do Fornecedor é obrigatório")]
         public string Nome { get; set; }
         [Required]

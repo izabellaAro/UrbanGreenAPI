@@ -1,4 +1,4 @@
-﻿namespace UrbanGreen.DataAcess.Repositories;
+﻿namespace UrbanGreen.DataAcess.Interface;
 
 public interface IBaseRepository<TEntity> where TEntity : class
 {

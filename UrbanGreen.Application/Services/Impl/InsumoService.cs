@@ -1,4 +1,5 @@
-﻿using UrbanGreen.DataAcess.Repositories;
+﻿using UrbanGreen.Application.Interface;
+using UrbanGreen.DataAcess.Interface;
 using UrbanGreenAPI.Application.Models;
 using UrbanGreenAPI.Core.Entities;
 
