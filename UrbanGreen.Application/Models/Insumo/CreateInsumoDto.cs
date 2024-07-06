@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UrbanGreenAPI.Application.Models;
+namespace UrbanGreen.Application.Models.Insumo;
 
-public class UpdateInsumoDto
+public class CreateInsumoDto
 {
     [Required(ErrorMessage = "O nome do Insumo é obrigatório")]
     public string Nome { get; set; }

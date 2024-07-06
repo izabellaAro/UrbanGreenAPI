@@ -1,5 +1,6 @@
-﻿using UrbanGreen.DataAcess.Repositories;
-using UrbanGreenAPI.Application.Models;
+﻿using UrbanGreen.Application.Models.Insumo;
+using UrbanGreen.Application.Services.Interfaces;
+using UrbanGreen.DataAcess.Repositories.Interfaces;
 using UrbanGreenAPI.Core.Entities;
 
 namespace UrbanGreenAPI.Application.Services.Impl;

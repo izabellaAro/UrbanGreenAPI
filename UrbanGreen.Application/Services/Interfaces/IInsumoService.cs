@@ -1,6 +1,6 @@
-﻿using UrbanGreenAPI.Application.Models;
+﻿using UrbanGreen.Application.Models.Insumo;
 
-namespace UrbanGreenAPI.Application.Services;
+namespace UrbanGreen.Application.Services.Interfaces;
 
 public interface IInsumoService
 {

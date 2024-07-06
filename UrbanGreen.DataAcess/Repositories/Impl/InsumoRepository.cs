@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UrbanGreen.DataAcess.Persistence;
+using UrbanGreen.DataAcess.Repositories.Interfaces;
 using UrbanGreenAPI.Core.Entities;
 
 namespace UrbanGreen.DataAcess.Repositories.Impl;

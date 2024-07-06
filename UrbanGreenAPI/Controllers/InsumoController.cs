@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UrbanGreenAPI.Application.Models;
-using UrbanGreenAPI.Application.Services;
+using UrbanGreen.Application.Models.Insumo;
+using UrbanGreen.Application.Services.Interfaces;
 
 namespace UrbanGreenAPI.Controllers;
 
-[Controller]
-[Route("[controller]")]
+[Route("api/[controller]")]
+[ApiController]
 public class InsumoController : Controller
 {
     private readonly IInsumoService _insumoService;

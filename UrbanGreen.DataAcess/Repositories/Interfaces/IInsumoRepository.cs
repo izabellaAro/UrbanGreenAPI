@@ -1,6 +1,6 @@
 ﻿using UrbanGreenAPI.Core.Entities;
 
-namespace UrbanGreen.DataAcess.Repositories;
+namespace UrbanGreen.DataAcess.Repositories.Interfaces;
 
 public interface IInsumoRepository : IBaseRepository<Insumo>
 {

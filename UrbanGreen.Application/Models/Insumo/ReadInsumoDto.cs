@@ -1,4 +1,4 @@
-﻿namespace UrbanGreenAPI.Application.Models;
+﻿namespace UrbanGreen.Application.Models.Insumo;
 
 public class ReadInsumoDto
 {
