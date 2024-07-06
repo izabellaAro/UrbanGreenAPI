@@ -6,7 +6,7 @@ namespace UrbanGreenAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class InsumoController : Controller
+public class InsumoController : ControllerBase
 {
     private readonly IInsumoService _insumoService;
 
