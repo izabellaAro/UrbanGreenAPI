@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,6 +11,24 @@ namespace UrbanGreen.DataAcess.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Inspecoes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SelecaoSemente = table.Column<bool>(type: "bit", nullable: false),
+                    ControlePragas = table.Column<bool>(type: "bit", nullable: false),
+                    Irrigacao = table.Column<bool>(type: "bit", nullable: false),
+                    CuidadoSolo = table.Column<bool>(type: "bit", nullable: false),
+                    Colheita = table.Column<bool>(type: "bit", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inspecoes", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Insumos",
                 columns: table => new
@@ -43,7 +62,7 @@ namespace UrbanGreen.DataAcess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Fornecedor",
+                name: "Fornecedores",
                 columns: table => new
                 {
                     FornecedorId = table.Column<int>(type: "int", nullable: false)
@@ -54,9 +73,9 @@ namespace UrbanGreen.DataAcess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Fornecedor", x => x.FornecedorId);
+                    table.PrimaryKey("PK_Fornecedores", x => x.FornecedorId);
                     table.ForeignKey(
-                        name: "FK_Fornecedor_PessoaJuridica_PessoaJuridicaId",
+                        name: "FK_Fornecedores_PessoaJuridica_PessoaJuridicaId",
                         column: x => x.PessoaJuridicaId,
                         principalTable: "PessoaJuridica",
                         principalColumn: "Id",
@@ -64,8 +83,8 @@ namespace UrbanGreen.DataAcess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fornecedor_PessoaJuridicaId",
-                table: "Fornecedor",
+                name: "IX_Fornecedores_PessoaJuridicaId",
+                table: "Fornecedores",
                 column: "PessoaJuridicaId");
         }
 
@@ -73,7 +92,10 @@ namespace UrbanGreen.DataAcess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Fornecedor");
+                name: "Fornecedores");
+
+            migrationBuilder.DropTable(
+                name: "Inspecoes");
 
             migrationBuilder.DropTable(
                 name: "Insumos");
