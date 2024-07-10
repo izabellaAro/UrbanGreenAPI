@@ -17,11 +17,13 @@ builder.Services.AddScoped<IInsumoRepository, InsumoRepository>();
 builder.Services.AddScoped<IPessoaJuridicaRepository, PessoaJuridicaRepository>();
 builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();
 builder.Services.AddScoped<IInspecaoRepository, InspecaoRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
 builder.Services.AddScoped<IInsumoService, InsumoService>();
 builder.Services.AddScoped<IPessoaJuridicaService, PessoaJuridicaService>();
 builder.Services.AddScoped<IFornecedorService, FornecedorService>();
 builder.Services.AddScoped<IInspecaoService, InspecaoService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
 
 
 builder.Services.AddControllers();

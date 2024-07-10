@@ -117,6 +117,31 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.ToTable("PessoaJuridica");
                 });
 
+            modelBuilder.Entity("UrbanGreen.Core.Entities.Produto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantidade")
+                        .HasMaxLength(5000)
+                        .HasColumnType("int");
+
+                    b.Property<double>("Valor")
+                        .HasMaxLength(10000)
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Produto");
+                });
+
             modelBuilder.Entity("UrbanGreenAPI.Core.Entities.Insumo", b =>
                 {
                     b.Property<int>("Id")
