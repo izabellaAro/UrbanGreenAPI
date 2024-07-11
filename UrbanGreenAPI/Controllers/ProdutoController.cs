@@ -37,7 +37,7 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarProduto(int id, [FromBody] UpdateProdutoDto produtoDto)
+    public async Task<IActionResult> AtualizarProduto(int id, [FromForm] UpdateProdutoDto produtoDto)
     {
         var produtoAtualizado = await _produtoService.AtualizarProduto(id, produtoDto);
         if (produtoAtualizado == false) return NotFound();
