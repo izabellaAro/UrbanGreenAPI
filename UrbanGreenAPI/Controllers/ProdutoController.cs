@@ -16,7 +16,7 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CadastrarProduto([FromBody] CreateProdutoDto produtoDto)
+    public async Task<IActionResult> CadastrarProduto([FromForm] CreateProdutoDto produtoDto)
     {
         await _produtoService.CadastrarProduto(produtoDto);
         return NoContent();
@@ -50,5 +50,13 @@ public class ProdutoController : ControllerBase
         var produto = await _produtoService.DeletarProduto(id);
         if (produto == false) return NotFound();
         return NoContent();
+    }
+
+    [HttpGet("{id}/imagem")]
+    public async Task<IActionResult> ObterImagemProduto(int id)
+    {
+        var imagem = await _produtoService.ObterImagemProduto(id);
+        if (imagem == null) return NotFound();
+        return File(imagem, "image/jpeg");
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace UrbanGreen.Application.Models.Produto;
 
@@ -14,4 +15,6 @@ public class UpdateProdutoDto
     [Required]
     [Range(1, 10000, ErrorMessage = "O valor do Produto é obrigatório e deve ser entre R$1 a R$10000")]
     public double Valor { get; set; }
+
+    public IFormFile Imagem { get; set; }
 }

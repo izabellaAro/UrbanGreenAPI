@@ -9,4 +9,5 @@ public interface IProdutoService
     Task<ReadProdutoDto> ConsultarProdutoPorID(int id);
     Task<bool> AtualizarProduto(int id, UpdateProdutoDto produtoDto);
     Task<bool> DeletarProduto(int id);
+    Task<byte[]> ObterImagemProduto(int id);
 }

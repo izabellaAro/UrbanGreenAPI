@@ -20,5 +20,7 @@ public class ProdutoConfiguration : IEntityTypeConfiguration<Produto>
         builder.Property(x => x.Valor)
             .HasMaxLength(10000)
             .IsRequired();
+
+        builder.Property(x => x.Imagem);
     }
 }

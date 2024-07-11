@@ -18,14 +18,32 @@ public class ProdutoService : IProdutoService
     {
         var produto = await _produtoRepository.ConsultarProdutoPorID(id);
         if (produto == null) return false;
-        produto.Update(produtoDto.Nome, produtoDto.Quantidade, produtoDto.Valor);
+        byte[] imagemData = null;
+        if (produtoDto.Imagem != null)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await produtoDto.Imagem.CopyToAsync(ms);
+                imagemData = ms.ToArray();
+            }
+        }
+        produto.Update(produtoDto.Nome, produtoDto.Quantidade, produtoDto.Valor, imagemData);
         await _produtoRepository.UpdateAsync(produto);
         return true;
     }
 
     public async Task CadastrarProduto(CreateProdutoDto produtoDto)
     {
-        var produto = new Produto(produtoDto.Nome, produtoDto.Quantidade, produtoDto.Valor);
+        byte[] imagemData = null;
+        if (produtoDto.Imagem != null)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await produtoDto.Imagem.CopyToAsync(ms);
+                imagemData = ms.ToArray();
+            }
+        }
+        var produto = new Produto(produtoDto.Nome, produtoDto.Quantidade, produtoDto.Valor, imagemData);
         await _produtoRepository.AddAsync(produto);
     }
 
@@ -40,7 +58,8 @@ public class ProdutoService : IProdutoService
             Id = produtoID.Id,
             Nome = produtoID.Nome,
             Quantidade = produtoID.Quantidade,
-            Valor = produtoID.Valor
+            Valor = produtoID.Valor,
+            ImagemUrl = produtoID.Imagem != null ? $"api/produto/{produtoID.Id}/imagem" : null
         };
     }
 
@@ -53,7 +72,8 @@ public class ProdutoService : IProdutoService
             Id = produto.Id,
             Nome = produto.Nome,
             Quantidade = produto.Quantidade,
-            Valor = produto.Valor
+            Valor = produto.Valor,
+            ImagemUrl = produto.Imagem != null ? $"api/produto/{produto.Id}/imagem" : null
         }).ToList();
     }
 
@@ -63,5 +83,11 @@ public class ProdutoService : IProdutoService
         if (produto == null) return false;
         await _produtoRepository.DeleteAsync(produto);
         return true;
+    }
+
+    public async Task<byte[]> ObterImagemProduto(int id)
+    {
+        var produto = await _produtoRepository.ConsultarProdutoPorID(id);
+        return produto?.Imagem;
     }
 }
