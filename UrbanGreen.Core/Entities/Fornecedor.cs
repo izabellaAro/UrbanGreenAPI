@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UrbanGreenAPI.Core.Entities;
 
 namespace UrbanGreen.Core.Entities
 {
@@ -10,24 +6,25 @@ namespace UrbanGreen.Core.Entities
     {
         public int FornecedorId { get; set; }
         public string Nome { get; set; }
-        public string Cnpj { get; set; }
         public int PessoaJuridicaId { get; set; }
         public virtual PessoaJuridica PessoaJuridica { get; set; }
+        public int InsumoId { get; set; }
+        public virtual Insumo Insumo { get; set; }
 
         public Fornecedor() { }
 
-        public Fornecedor(string nome, string cnpj, PessoaJuridica pessoaJuridica)
+        public Fornecedor(string nome, PessoaJuridica pessoaJuridica, Insumo insumo, int insumoId)
         {
             Nome = nome;
-            Cnpj = cnpj;
             PessoaJuridica = pessoaJuridica;
             PessoaJuridicaId = pessoaJuridica.Id;
+            Insumo = insumo;
+            InsumoId = insumoId;
         }
 
-        public void Update(string nome, string Cnpj)
+        public void Update(string nome)
         {
             Nome = nome;
-            Cnpj = Cnpj;
         }
     }
 }

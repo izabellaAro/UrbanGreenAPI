@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UrbanGreen.Core.Entities;
-using UrbanGreenAPI.Core.Entities;
+﻿using UrbanGreen.Core.Entities;
 
 namespace UrbanGreen.DataAcess.Repositories.Interfaces
 {

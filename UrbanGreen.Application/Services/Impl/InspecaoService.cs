@@ -8,23 +8,27 @@ namespace UrbanGreen.Application.Services.Impl
     public class InspecaoService : IInspecaoService
     {
         private readonly IInspecaoRepository _inspecaoRepository;
-        public InspecaoService(IInspecaoRepository inspecaoRepository)
+        private readonly IProdutoRepository _produtoRepository;
+        public InspecaoService(IInspecaoRepository inspecaoRepository, IProdutoRepository produtoRepository)
         {
             _inspecaoRepository = inspecaoRepository;
+            _produtoRepository = produtoRepository;
         }
 
         public async Task<bool> AtualizarInspecao(int id, UpdateInspecaoDto inspecaoDto)
         {
+            var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
             var inspecao = await _inspecaoRepository.ConsultarInspecaoPorID(id);
-            if (inspecao == null) return false;
-            inspecao.Update(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita);
+            if (inspecao == null || produto == null) return false;
+            inspecao.Update(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita, produto, produto.Id);
             await _inspecaoRepository.UpdateAsync(inspecao);
             return true;
         }
 
         public async Task CadastrarInspecao(CreateInspecaoDto inspecaoDto)
         {
-            var inspecao = new Inspecao(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita);
+            var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
+            var inspecao = new Inspecao(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita, produto, produto.Id);
             await _inspecaoRepository.AddAsync(inspecao);
         }
 
@@ -40,7 +44,8 @@ namespace UrbanGreen.Application.Services.Impl
                 ControlePragas = inspecao.ControlePragas,
                 Irrigacao = inspecao.Irrigacao,
                 CuidadoSolo = inspecao.CuidadoSolo,
-                Colheita = inspecao.Colheita
+                Colheita = inspecao.Colheita,
+                ProdutoId = inspecao.ProdutoId
             }).ToList();
         }
 
@@ -58,7 +63,8 @@ namespace UrbanGreen.Application.Services.Impl
                 ControlePragas = inspecaoID.ControlePragas,
                 Irrigacao = inspecaoID.Irrigacao,
                 CuidadoSolo = inspecaoID.CuidadoSolo,
-                Colheita = inspecaoID.Colheita
+                Colheita = inspecaoID.Colheita,
+                ProdutoId = inspecaoID.ProdutoId
             };
         }
 

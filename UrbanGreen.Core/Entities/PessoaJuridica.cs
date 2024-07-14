@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace UrbanGreen.Core.Entities;
+﻿namespace UrbanGreen.Core.Entities;
 
 public class PessoaJuridica
 {

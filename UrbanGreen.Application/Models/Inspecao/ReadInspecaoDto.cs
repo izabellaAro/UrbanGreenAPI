@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UrbanGreen.Application.Models.Inspecao
+﻿namespace UrbanGreen.Application.Models.Inspecao
 {
     public class ReadInspecaoDto
     {
@@ -15,5 +9,6 @@ namespace UrbanGreen.Application.Models.Inspecao
         public bool Irrigacao { get; set; }
         public bool CuidadoSolo { get; set; }
         public bool Colheita { get; set; }
+        public int ProdutoId { get; set; }
     }
 }

@@ -11,11 +11,6 @@ public class FornecedorConfiguration : IEntityTypeConfiguration<Fornecedor>
         builder.HasKey(x => x.FornecedorId);
         builder.Property(x => x.Nome)
            .IsRequired();
-
-        builder.Property(x => x.Cnpj)
-             .IsRequired()
-             .HasMaxLength(14)
-             .IsFixedLength();
     }
 }
 
