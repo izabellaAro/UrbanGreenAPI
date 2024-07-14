@@ -9,12 +9,16 @@ namespace UrbanGreen.Application.Services.Impl
     {
         private readonly IItemPedidoRepository _itemPedidoRepository;
         private readonly IProdutoRepository _produtoRepository;
+        private readonly IPedidoService _peditoService;
+        private readonly IPedidoRepository _peditoRepository;
 
 
-        public ItemPedidoService(IItemPedidoRepository itemPedidoRepository, IProdutoRepository produtoRepository)
+        public ItemPedidoService(IItemPedidoRepository itemPedidoRepository, IProdutoRepository produtoRepository, IPedidoService pedidoService, IPedidoRepository peditoRepository)
         {
             _itemPedidoRepository = itemPedidoRepository;
             _produtoRepository = produtoRepository;
+            _peditoService = pedidoService;
+            _peditoRepository = peditoRepository;
         }
 
         public async Task<bool> AtualizarItemPedido(int id, UpdateItemPedidoDto ItemPedidoDto)
@@ -22,7 +26,7 @@ namespace UrbanGreen.Application.Services.Impl
             var produto = await _produtoRepository.ConsultarProdutoPorID(ItemPedidoDto.ProdutoId);
             var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(id);
             if (itemPedido == null || produto == null) return false;
-            itemPedido.Update(ItemPedidoDto.Quantidade, produto, produto.Id);
+            itemPedido.Update(ItemPedidoDto.Quantidade, produto, produto.Id, itemPedido.Pedido.Id);
             await _itemPedidoRepository.UpdateAsync(itemPedido);
             return true;
         }
@@ -35,8 +39,15 @@ namespace UrbanGreen.Application.Services.Impl
             {
                 throw new Exception("Produto não encontrado.");
             }
+
+            string nomeComprador = null;
+            int id = 0;
             var itemPedido = new ItemPedido(produto, ItemPedidoDto.Quantidade, produto.Id);
+            
             await _itemPedidoRepository.AddAsync(itemPedido);
+            var pedido = new Pedido(DateTime.Now, nomeComprador, itemPedido.Id, produto.Valor);
+            await _peditoRepository.UpdateAsync(pedido);
+
         }
 
         public Task<IEnumerable<ReadItemPedidoDto>> ConsultarItemPedido(int skip = 0, int take = 20)

@@ -6,7 +6,9 @@
         public int ProdutoId { get; set; }
         public virtual Produto Produto { get; set; }
         public int Quantidade { get; set; }
-
+        //public int PedidoId { get; set; }
+        public virtual Pedido? Pedido { get; set; }
+        
         public ItemPedido() { }
 
         public ItemPedido(Produto produto, int quantidade, int produtoId) 
@@ -16,11 +18,12 @@
             Quantidade = quantidade;
         }
 
-        public void Update(int quantidade, Produto produto, int produtoId)
+        public void Update(int quantidade, Produto produto, int produtoId, int pedidoId)
         {
             Quantidade = quantidade;
             Produto = produto;
             ProdutoId = produtoId;
+            //PedidoId = pedidoId;
         }
     }
 }

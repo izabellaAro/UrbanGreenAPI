@@ -11,6 +11,7 @@ namespace UrbanGreen.DataAcess.Persistence.Configurations
             builder.Property(x => x.Quantidade)
                 .HasDefaultValue(1)
                 .IsRequired();
+
         }
     }
 }

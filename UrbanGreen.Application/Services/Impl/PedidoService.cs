@@ -10,12 +10,14 @@ namespace UrbanGreen.Application.Services.Impl
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IItemPedidoRepository _itemPedidoRepository;
         private readonly IProdutoRepository _produtoRepository;
+   
 
         public PedidoService(IPedidoRepository pedidoRepository, IItemPedidoRepository itemPedidoRepository, IProdutoRepository produtoRepository)
         {
             _pedidoRepository = pedidoRepository;
             _itemPedidoRepository = itemPedidoRepository;
             _produtoRepository = produtoRepository;
+
         }
 
         public async Task<bool> AtualizarPedido(int id, UpdatePedidoDto pedidoDto)
@@ -23,23 +25,35 @@ namespace UrbanGreen.Application.Services.Impl
             var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(pedidoDto.ItemPedidoId);
             var pedido = await _pedidoRepository.ConsultarPedidoPorID(id);
             if (pedido == null || itemPedido == null) return false;
-            pedido.Update(pedidoDto.Data, pedidoDto.NomeComprador, itemPedido, itemPedido.Id);          
+            pedido.Update(pedidoDto.Data, itemPedido.Id);          
             await _pedidoRepository.UpdateAsync(pedido);
             return true;
         }
 
         public async Task CadastrarPedido(CreatePedidoDto pedidoDto)
         {
-            var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(pedidoDto.ItemPedidoId);
-            var produto = await _produtoRepository.ConsultarProdutoPorID(itemPedido.ProdutoId);
-            var valorTotal = CalcularValorTotal(produto.Valor, itemPedido.Quantidade);
-            if (itemPedido == null)
+            var itensPedidos = new List<ItemPedido>();
+            foreach(var item in pedidoDto.ItensPedidoIds)
             {
-                throw new Exception("Item pedido não encontrado.");
+                var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(item);
+
+                var produto = await _produtoRepository.ConsultarProdutoPorID(itemPedido.ProdutoId);
+                var valorTotal = CalcularValorTotal(produto.Valor, itemPedido.Quantidade);
+                if (itemPedido == null)
+                {
+                    throw new Exception("Item pedido não encontrado.");
+                }
+
+
+                var pedido = new Pedido(pedidoDto.Data, pedidoDto.NomeComprador, itemPedido.Id, valorTotal);
+                await _pedidoRepository.AddAsync(pedido);
+
+                itemPedido.Update(itemPedido.Quantidade, itemPedido.Produto, itemPedido.ProdutoId, pedido.Id);
+                await _itemPedidoRepository.UpdateAsync(itemPedido);
+
+               
             }
-            
-            var pedido = new Pedido(pedidoDto.Data, pedidoDto.NomeComprador, itemPedido, itemPedido.Id, valorTotal);
-            await _pedidoRepository.AddAsync(pedido);
+
         }
 
         public double CalcularValorTotal(double valor, int quantidade)
@@ -97,8 +111,8 @@ namespace UrbanGreen.Application.Services.Impl
                 NomeComprador = pedido.NomeComprador,
                 ValorTotal = pedido.ValorTotal,
                 ItemPedidoId = pedido.ItemPedidoId,
-                NomeProduto = pedido.ItemPedido.Produto.Nome,
-                QuantidadeProduto = pedido.ItemPedido.Produto.Quantidade
+                //NomeProduto = pedido.ItemPedido.Produto.Nome,
+                //QuantidadeProduto = pedido.ItemPedido.Produto.Quantidade
 
             }).ToList();
         }

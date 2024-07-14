@@ -9,6 +9,7 @@ namespace UrbanGreen.Application.Models.Pedido
         [Required(ErrorMessage = "O nome do comprador é obrigatório")]
         public string NomeComprador { get; set; }
         [Required]
-        public int ItemPedidoId { get; set; }
+        //public int ItemPedidoId { get; set; }
+        public List<int> ItensPedidoIds { get; set; }
     }
 }

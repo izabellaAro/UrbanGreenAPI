@@ -13,12 +13,6 @@ namespace UrbanGreen.DataAcess.Persistence.Configurations
             builder.Property(x => x.Data)
                 .IsRequired();
 
-            builder.Property(x => x.NomeComprador)
-                .IsRequired();
-
-            builder.Property(x => x.ValorTotal)
-                .IsRequired()
-                .HasColumnType("decimal(18,2)");
         }
     }
 }

@@ -4,28 +4,31 @@
     {
         public int Id { get; set; }
         public DateTime Data { get; set; }
-        public string NomeComprador { get; set; }
+        public string? NomeComprador { get; set; }
         public double ValorTotal { get; set; }
         public int ItemPedidoId { get; set; }
-        public virtual ItemPedido ItemPedido { get; set; }
+        //public virtual ItemPedido ItensPedidos { get; set; }
+       // public ICollection<ItemPedido> ItensPedidos { get; set; }
 
 
-        public Pedido() { }
+        public Pedido() 
+        {
+           // ItensPedidos = new List<ItemPedido>();
+        }
 
-        public Pedido(DateTime data, string nomeComprador, ItemPedido itemPedido, int itemPedidoId, double valorTotal)
+        public Pedido(DateTime data, string? nomeComprador, int itemPedidoId, double valorTotal)
         {
             Data = data;
             NomeComprador = nomeComprador;
-            ItemPedido = itemPedido;
+            //ItemPedido = itemPedido;
             ItemPedidoId = itemPedidoId;
             ValorTotal = valorTotal;
         }
 
-            public void Update(DateTime data, string nomeComprador, ItemPedido itemPedido, int itemPedidoId)
+            public void Update(DateTime data, int itemPedidoId)
             {
                 Data = data;
-                NomeComprador = nomeComprador;
-                ItemPedido = itemPedido;
+                //ItemPedido = itemPedido;
                 ItemPedidoId = itemPedidoId;
         }
         
