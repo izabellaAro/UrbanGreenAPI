@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using UrbanGreen.Core.Entities;
 using UrbanGreenAPI.Core.Entities;
 
 namespace UrbanGreen.DataAcess.Persistence;
 
-public class DataContext : DbContext
+public class DataContext : IdentityDbContext<Usuario>
 {
     public DataContext(DbContextOptions<DataContext> opts) : base(opts) { }
 
