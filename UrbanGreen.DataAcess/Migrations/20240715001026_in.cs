@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UrbanGreen.DataAcess.Migrations
 {
     /// <inheritdoc />
-    public partial class inicial : Migration
+    public partial class @in : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,22 @@ namespace UrbanGreen.DataAcess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Insumos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pedidos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NomeComprador = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ValorTotal = table.Column<double>(type: "float", nullable: false),
+                    ItemPedidoId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pedidos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,7 +134,8 @@ namespace UrbanGreen.DataAcess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProdutoId = table.Column<int>(type: "int", nullable: false),
-                    Quantidade = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                    Quantidade = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    IdPedido = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,28 +144,6 @@ namespace UrbanGreen.DataAcess.Migrations
                         name: "FK_ItensPedidos_Produto_ProdutoId",
                         column: x => x.ProdutoId,
                         principalTable: "Produto",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pedidos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NomeComprador = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ValorTotal = table.Column<double>(type: "float", nullable: false),
-                    ItemPedidoId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pedidos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pedidos_ItensPedidos_ItemPedidoId",
-                        column: x => x.ItemPedidoId,
-                        principalTable: "ItensPedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -172,12 +167,6 @@ namespace UrbanGreen.DataAcess.Migrations
                 name: "IX_ItensPedidos_ProdutoId",
                 table: "ItensPedidos",
                 column: "ProdutoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pedidos_ItemPedidoId",
-                table: "Pedidos",
-                column: "ItemPedidoId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -190,6 +179,9 @@ namespace UrbanGreen.DataAcess.Migrations
                 name: "Inspecoes");
 
             migrationBuilder.DropTable(
+                name: "ItensPedidos");
+
+            migrationBuilder.DropTable(
                 name: "Pedidos");
 
             migrationBuilder.DropTable(
@@ -197,9 +189,6 @@ namespace UrbanGreen.DataAcess.Migrations
 
             migrationBuilder.DropTable(
                 name: "PessoaJuridica");
-
-            migrationBuilder.DropTable(
-                name: "ItensPedidos");
 
             migrationBuilder.DropTable(
                 name: "Produto");

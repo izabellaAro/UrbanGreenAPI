@@ -93,6 +93,9 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("IdPedido")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
@@ -119,19 +122,17 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ItemPedidoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NomeComprador")
+                    b.Property<string>("ItemPedidoId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("ValorTotal")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("NomeComprador")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ValorTotal")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemPedidoId");
 
                     b.ToTable("Pedidos");
                 });
@@ -265,17 +266,6 @@ namespace UrbanGreen.DataAcess.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
-                });
-
-            modelBuilder.Entity("UrbanGreen.Core.Entities.Pedido", b =>
-                {
-                    b.HasOne("UrbanGreen.Core.Entities.ItemPedido", "ItemPedido")
-                        .WithMany()
-                        .HasForeignKey("ItemPedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ItemPedido");
                 });
 #pragma warning restore 612, 618
         }

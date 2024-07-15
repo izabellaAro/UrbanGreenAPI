@@ -12,8 +12,8 @@ using UrbanGreen.DataAcess.Persistence;
 namespace UrbanGreen.DataAcess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240714205805_inicial")]
-    partial class inicial
+    [Migration("20240715001026_in")]
+    partial class @in
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,6 +96,9 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("IdPedido")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
@@ -122,20 +125,17 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ItemPedidoId")
-                        .HasColumnType("int");
+                    b.Property<string>("ItemPedidoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeComprador")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ValorTotal")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemPedidoId")
-                        .IsUnique();
 
                     b.ToTable("Pedidos");
                 });
@@ -269,20 +269,6 @@ namespace UrbanGreen.DataAcess.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
-                });
-
-            modelBuilder.Entity("UrbanGreen.Core.Entities.Pedido", b =>
-                {
-                    b.HasOne("UrbanGreen.Core.Entities.ItemPedido", null)
-                        .WithOne("Pedido")
-                        .HasForeignKey("UrbanGreen.Core.Entities.Pedido", "ItemPedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UrbanGreen.Core.Entities.ItemPedido", b =>
-                {
-                    b.Navigation("Pedido");
                 });
 #pragma warning restore 612, 618
         }

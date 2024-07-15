@@ -23,7 +23,6 @@ namespace UrbanGreen.DataAcess.Repositories.Impl
         public async Task<IEnumerable<Pedido>> GetAllAsync()
         {
             return await _context.Pedidos
-                .Include(p => p.Id) 
                 .ToListAsync();
         }
     }
