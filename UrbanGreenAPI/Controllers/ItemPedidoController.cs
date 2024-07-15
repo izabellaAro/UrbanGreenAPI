@@ -2,61 +2,60 @@
 using UrbanGreen.Application.Models.ItemPedido;
 using UrbanGreen.Application.Services.Interfaces;
 
-namespace UrbanGreenAPI.Controllers
+namespace UrbanGreenAPI.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ItemPedidoController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ItemPedidoController : ControllerBase
+    private readonly IItemPedidoService _itemPedidoService;
+    private readonly IProdutoService _produtoService;
+
+    public ItemPedidoController(IItemPedidoService itemPedidoService, IProdutoService produtoService)
     {
-        private readonly IItemPedidoService _itemPedidoService;
-        private readonly IProdutoService _produtoService;
+        _itemPedidoService = itemPedidoService;
+        _produtoService = produtoService;
+    }
+    [HttpPost]
+    public async Task<IActionResult> CadastrarItemPedido([FromBody] CreateItemPedidoDto itemPedidoDto)
+    {
+        var produto = await _produtoService.ConsultarProdutoPorID(itemPedidoDto.ProdutoId);
 
-        public ItemPedidoController(IItemPedidoService itemPedidoService, IProdutoService produtoService)
+        if (produto == null)
         {
-            _itemPedidoService = itemPedidoService;
-            _produtoService = produtoService;
+            throw new Exception("Produto não encontrado.");
         }
-        [HttpPost]
-        public async Task<IActionResult> CadastrarItemPedido([FromBody] CreateItemPedidoDto itemPedidoDto)
-        {
-            var produto = await _produtoService.ConsultarProdutoPorID(itemPedidoDto.ProdutoId);
+        await _itemPedidoService.CadastrarItemPedido(itemPedidoDto);
+        return NoContent();
+    }
 
-            if (produto == null)
-            {
-                throw new Exception("Produto não encontrado.");
-            }
-            await _itemPedidoService.CadastrarItemPedido(itemPedidoDto);
-            return NoContent();
-        }
+    [HttpGet]
+    public async Task<IEnumerable<ReadItemPedidoDto>> ConsultarItemPedido([FromQuery] int skip = 0, [FromQuery] int take = 50)
+    {
+        return await _itemPedidoService.ConsultarItemPedido(skip, take);
+    }
 
-        [HttpGet]
-        public async Task<IEnumerable<ReadItemPedidoDto>> ConsultarItemPedido([FromQuery] int skip = 0, [FromQuery] int take = 50)
-        {
-            return await _itemPedidoService.ConsultarItemPedido(skip, take);
-        }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> ConsultarItemPedidoPorID(int id)
+    {
+        var itemPedido = await _itemPedidoService.ConsultarItemPedidoPorID(id);
+        if (itemPedido == null) return NotFound();
+        return Ok(itemPedido);
+    }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> ConsultarItemPedidoPorID(int id)
-        {
-            var itemPedido = await _itemPedidoService.ConsultarItemPedidoPorID(id);
-            if (itemPedido == null) return NotFound();
-            return Ok(itemPedido);
-        }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> AtualizarItemPedido(int id, [FromBody] UpdateItemPedidoDto itemPedidoDto)
+    {
+        var itemPedidoAtualizado = await _itemPedidoService.AtualizarItemPedido(id, itemPedidoDto);
+        if (itemPedidoAtualizado == false) return NotFound();
+        return NoContent();
+    }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarItemPedido(int id, [FromBody] UpdateItemPedidoDto itemPedidoDto)
-        {
-            var itemPedidoAtualizado = await _itemPedidoService.AtualizarItemPedido(id, itemPedidoDto);
-            if (itemPedidoAtualizado == false) return NotFound();
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarItemPedido(int id)
-        {
-            var itemPedido = await _itemPedidoService.DeletarItemPedido(id);
-            if (itemPedido == false) return NotFound();
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarItemPedido(int id)
+    {
+        var itemPedido = await _itemPedidoService.DeletarItemPedido(id);
+        if (itemPedido == false) return NotFound();
+        return NoContent();
     }
 }

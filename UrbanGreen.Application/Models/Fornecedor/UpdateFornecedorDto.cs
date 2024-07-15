@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UrbanGreen.Application.Models.FornecedorDto
+namespace UrbanGreen.Application.Models.FornecedorDto;
+
+public class UpdateFornecedorDto
 {
-    public class UpdateFornecedorDto
-    {
-        [Required(ErrorMessage = "O nome do Fornecedor é obrigatório")]
-        public string Nome { get; set; }
-    }
+    [Required(ErrorMessage = "O nome do Fornecedor é obrigatório")]
+    public string Nome { get; set; }
 }

@@ -2,17 +2,16 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UrbanGreen.Core.Entities;
 
-namespace UrbanGreen.DataAcess.Persistence.Configurations
+namespace UrbanGreen.DataAcess.Persistence.Configurations;
+
+public class PedidoConfiguration : IEntityTypeConfiguration<Pedido>
 {
-    public class PedidoConfiguration : IEntityTypeConfiguration<Pedido>
+    public void Configure(EntityTypeBuilder<Pedido> builder)
     {
-        public void Configure(EntityTypeBuilder<Pedido> builder)
-        {
-            builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Data)
-                .IsRequired();
+        builder.Property(x => x.Data)
+            .IsRequired();
 
-        }
     }
 }

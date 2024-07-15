@@ -1,42 +1,41 @@
-﻿namespace UrbanGreen.Core.Entities
+﻿namespace UrbanGreen.Core.Entities;
+
+public class Inspecao
 {
-    public class Inspecao
+    public int Id { get; set; }
+    public DateTime Data = DateTime.Now;
+    public bool SelecaoSemente { get; set; }
+    public bool ControlePragas { get; set; }
+    public bool Irrigacao { get; set; }
+    public bool CuidadoSolo { get; set; }
+    public bool Colheita { get; set; }
+    public int ProdutoId { get; set; }
+    public virtual Produto Produto { get; set; }
+
+    public Inspecao() { }
+
+    public Inspecao(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
     {
-        public int Id { get; set; }
-        public DateTime Data = DateTime.Now;
-        public bool SelecaoSemente { get; set; }
-        public bool ControlePragas { get; set; }
-        public bool Irrigacao { get; set; }
-        public bool CuidadoSolo { get; set; }
-        public bool Colheita { get; set; }
-        public int ProdutoId { get; set; }
-        public virtual Produto Produto { get; set; }
+        Data = data;
+        SelecaoSemente = selecaoSemente;
+        ControlePragas = controlePragas;
+        Irrigacao = irrigacao;
+        CuidadoSolo = cuidadoSolo;
+        Colheita = colheita;
+        Produto = produto;
+        ProdutoId = produtoId;
 
-        public Inspecao() { }
+    }
 
-        public Inspecao(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
-        {
-            Data = data;
-            SelecaoSemente = selecaoSemente;
-            ControlePragas = controlePragas;
-            Irrigacao = irrigacao;
-            CuidadoSolo = cuidadoSolo;
-            Colheita = colheita;
-            Produto = produto;
-            ProdutoId = produtoId;
-
-        }
-
-        public void Update(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
-        {
-            Data = data;
-            SelecaoSemente = selecaoSemente;
-            ControlePragas = controlePragas;
-            Irrigacao = irrigacao;
-            CuidadoSolo = cuidadoSolo;
-            Colheita = colheita;
-            Produto = produto;
-            ProdutoId = produtoId;
-        }
+    public void Update(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
+    {
+        Data = data;
+        SelecaoSemente = selecaoSemente;
+        ControlePragas = controlePragas;
+        Irrigacao = irrigacao;
+        CuidadoSolo = cuidadoSolo;
+        Colheita = colheita;
+        Produto = produto;
+        ProdutoId = produtoId;
     }
 }
