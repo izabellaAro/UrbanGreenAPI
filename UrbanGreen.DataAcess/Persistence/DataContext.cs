@@ -13,6 +13,9 @@ public class DataContext : IdentityDbContext<Usuario>
     public DbSet<Insumo> Insumos { get; set; }
     public DbSet<Fornecedor> Fornecedores { get; set; }
     public DbSet<Inspecao> Inspecoes { get; set; }
+    public DbSet<Pedido> Pedidos { get; set; }
+    public DbSet<ItemPedido> ItensPedidos { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder builder)

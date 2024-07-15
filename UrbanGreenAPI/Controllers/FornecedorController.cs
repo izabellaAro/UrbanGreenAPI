@@ -11,23 +11,26 @@ namespace UrbanGreenAPI.Controllers
     {
         private readonly IFornecedorService _fornecedorService;
         private readonly IPessoaJuridicaService _pessoaJuridicaService;
+        private readonly IInsumoService _insumoService;
 
-        public FornecedorController(IFornecedorService fornecedorService, IPessoaJuridicaService pessoaJuridicaService)
+        public FornecedorController(IFornecedorService fornecedorService, IPessoaJuridicaService pessoaJuridicaService, IInsumoService insumoService)
         {
             _fornecedorService = fornecedorService;
             _pessoaJuridicaService = pessoaJuridicaService;
+            _insumoService = insumoService;
         }
         [HttpPost]
         public async Task<IActionResult> CadastrarFornecedor([FromBody] CreateFornecedorDto fornecedorDto)
         {
-            var pessoaJuridica = await _pessoaJuridicaService.ConsultarPJPorID(fornecedorDto.PessoaJuridicaId);
-
-            if (pessoaJuridica == null)
+            try
             {
-                throw new Exception("Pessoa Jurídica não encontrada.");
+                await _fornecedorService.CadastrarFornecedor(fornecedorDto);
+                return NoContent();
             }
-            await _fornecedorService.CadastrarFornecedor(fornecedorDto);
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Erro inesperado: " + ex.Message });
+            }
         }
 
         [HttpGet]

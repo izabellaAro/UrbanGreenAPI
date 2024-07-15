@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Xml.Linq;
-
-namespace UrbanGreen.Core.Entities
+﻿namespace UrbanGreen.Core.Entities
 {
     public class Inspecao
     {
@@ -17,10 +9,12 @@ namespace UrbanGreen.Core.Entities
         public bool Irrigacao { get; set; }
         public bool CuidadoSolo { get; set; }
         public bool Colheita { get; set; }
+        public int ProdutoId { get; set; }
+        public virtual Produto Produto { get; set; }
 
         public Inspecao() { }
 
-        public Inspecao(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita)
+        public Inspecao(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
         {
             Data = data;
             SelecaoSemente = selecaoSemente;
@@ -28,9 +22,12 @@ namespace UrbanGreen.Core.Entities
             Irrigacao = irrigacao;
             CuidadoSolo = cuidadoSolo;
             Colheita = colheita;
+            Produto = produto;
+            ProdutoId = produtoId;
+
         }
 
-        public void Update(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita)
+        public void Update(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
         {
             Data = data;
             SelecaoSemente = selecaoSemente;
@@ -38,6 +35,8 @@ namespace UrbanGreen.Core.Entities
             Irrigacao = irrigacao;
             CuidadoSolo = cuidadoSolo;
             Colheita = colheita;
+            Produto = produto;
+            ProdutoId = produtoId;
         }
     }
 }

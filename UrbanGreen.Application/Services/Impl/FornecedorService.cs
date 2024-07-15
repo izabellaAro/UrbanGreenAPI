@@ -1,6 +1,5 @@
 ﻿using UrbanGreen.Application.Interface;
 using UrbanGreen.Application.Models.FornecedorDto;
-using UrbanGreen.Application.Services.Interfaces;
 using UrbanGreen.Core.Entities;
 using UrbanGreen.DataAcess.Interface;
 using UrbanGreen.DataAcess.Repositories.Interfaces;
@@ -11,31 +10,33 @@ namespace UrbanGreen.Application.Services.Impl
     {
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IPessoaJuridicaRepository _pessoaJuridicaRepository;
+        private readonly IInsumoRepository _insumoRepository;
 
-        public FornecedorService(IFornecedorRepository fornecedorRepository, IPessoaJuridicaRepository pessoaJuridicaRepository)
+        public FornecedorService(IFornecedorRepository fornecedorRepository, IPessoaJuridicaRepository pessoaJuridicaRepository, IInsumoRepository insumoRepository)
         {
             _fornecedorRepository = fornecedorRepository;
             _pessoaJuridicaRepository = pessoaJuridicaRepository;
-
+            _insumoRepository = insumoRepository;
         }
         public async Task<bool> AtualizarFornecedor(int id, UpdateFornecedorDto FornecedorDto)
         {
             var fornecedor = await _fornecedorRepository.ConsultarFornecedorPorID(id);
             if (fornecedor == null) return false;
-            fornecedor.Update(FornecedorDto.Nome, FornecedorDto.Cnpj);
+            fornecedor.Update(FornecedorDto.Nome);
             await _fornecedorRepository.UpdateAsync(fornecedor);
             return true;
         }
 
         public async Task CadastrarFornecedor(CreateFornecedorDto FornecedorDto)
         {
+            var insumo = await _insumoRepository.ConsultarInsumoPorID(FornecedorDto.InsumoId);
             var pessoaJuridica = await _pessoaJuridicaRepository.ConsultarPJPorID(FornecedorDto.PessoaJuridicaId);
 
-            if (pessoaJuridica == null)
+            if (pessoaJuridica == null || insumo == null)
             {
-                throw new Exception("Pessoa Jurídica não encontrada.");
+                throw new Exception("Pessoa Jurídica ou insumo não encontrado.");
             }
-            var fornecedor = new Fornecedor(FornecedorDto.Nome, FornecedorDto.Cnpj, pessoaJuridica);
+            var fornecedor = new Fornecedor(FornecedorDto.Nome, pessoaJuridica, insumo, insumo.Id);
             await _fornecedorRepository.AddAsync(fornecedor);
         }
 
@@ -49,7 +50,8 @@ namespace UrbanGreen.Application.Services.Impl
             {
                 FornecedorId = fornecedorID.FornecedorId,
                 Nome = fornecedorID.Nome,
-                Cnpj = fornecedorID.Cnpj
+                PessoaJuridicaId = fornecedorID.PessoaJuridicaId,
+                InsumoId = fornecedorID.InsumoId
             };
         }
 
@@ -60,8 +62,7 @@ namespace UrbanGreen.Application.Services.Impl
             return consultaFornecedor.Select(fornecedor => new ReadFornecedorDto
             {
                 FornecedorId = fornecedor.FornecedorId,
-                Nome = fornecedor.Nome,
-                Cnpj = fornecedor.Cnpj
+                Nome = fornecedor.Nome
             }).ToList();
         }
 

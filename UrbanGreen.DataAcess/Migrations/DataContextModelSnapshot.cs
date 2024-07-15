@@ -163,11 +163,8 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FornecedorId"));
 
-                    b.Property<string>("Cnpj")
-                        .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("nchar(14)")
-                        .IsFixedLength();
+                    b.Property<int>("InsumoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -177,6 +174,8 @@ namespace UrbanGreen.DataAcess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("FornecedorId");
+
+                    b.HasIndex("InsumoId");
 
                     b.HasIndex("PessoaJuridicaId");
 
@@ -206,12 +205,69 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.Property<bool>("Irrigacao")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("SelecaoSemente")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProdutoId");
+
                     b.ToTable("Inspecoes");
+                });
+
+            modelBuilder.Entity("UrbanGreen.Core.Entities.ItemPedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdPedido")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("ItensPedidos");
+                });
+
+            modelBuilder.Entity("UrbanGreen.Core.Entities.Pedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ItemPedidoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeComprador")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ValorTotal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pedidos");
                 });
 
             modelBuilder.Entity("UrbanGreen.Core.Entities.PessoaJuridica", b =>
@@ -422,13 +478,43 @@ namespace UrbanGreen.DataAcess.Migrations
 
             modelBuilder.Entity("UrbanGreen.Core.Entities.Fornecedor", b =>
                 {
+                    b.HasOne("UrbanGreenAPI.Core.Entities.Insumo", "Insumo")
+                        .WithMany()
+                        .HasForeignKey("InsumoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("UrbanGreen.Core.Entities.PessoaJuridica", "PessoaJuridica")
                         .WithMany()
                         .HasForeignKey("PessoaJuridicaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Insumo");
+
                     b.Navigation("PessoaJuridica");
+                });
+
+            modelBuilder.Entity("UrbanGreen.Core.Entities.Inspecao", b =>
+                {
+                    b.HasOne("UrbanGreen.Core.Entities.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("UrbanGreen.Core.Entities.ItemPedido", b =>
+                {
+                    b.HasOne("UrbanGreen.Core.Entities.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
                 });
 #pragma warning restore 612, 618
         }
