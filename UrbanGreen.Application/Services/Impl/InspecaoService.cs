@@ -20,7 +20,7 @@ public class InspecaoService : IInspecaoService
         var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
         var inspecao = await _inspecaoRepository.ConsultarInspecaoPorID(id);
         if (inspecao == null || produto == null) return false;
-        inspecao.Update(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita, produto, produto.Id);
+        inspecao.Update(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita,inspecaoDto.Registro, produto, produto.Id);
         await _inspecaoRepository.UpdateAsync(inspecao);
         return true;
     }
@@ -28,7 +28,7 @@ public class InspecaoService : IInspecaoService
     public async Task CadastrarInspecao(CreateInspecaoDto inspecaoDto)
     {
         var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
-        var inspecao = new Inspecao(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita, produto, produto.Id);
+        var inspecao = new Inspecao(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita, inspecaoDto.Registro, produto, produto.Id);
         await _inspecaoRepository.AddAsync(inspecao);
     }
 
@@ -45,6 +45,7 @@ public class InspecaoService : IInspecaoService
             Irrigacao = inspecao.Irrigacao,
             CuidadoSolo = inspecao.CuidadoSolo,
             Colheita = inspecao.Colheita,
+            Registro = inspecao.Registro,
             ProdutoId = inspecao.ProdutoId
         }).ToList();
     }
@@ -64,6 +65,7 @@ public class InspecaoService : IInspecaoService
             Irrigacao = inspecaoID.Irrigacao,
             CuidadoSolo = inspecaoID.CuidadoSolo,
             Colheita = inspecaoID.Colheita,
+            Registro = inspecaoID.Registro,
             ProdutoId = inspecaoID.ProdutoId
         };
     }

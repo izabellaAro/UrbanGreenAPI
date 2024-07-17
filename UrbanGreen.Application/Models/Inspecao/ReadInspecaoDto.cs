@@ -10,4 +10,5 @@ public class ReadInspecaoDto
     public bool CuidadoSolo { get; set; }
     public bool Colheita { get; set; }
     public int ProdutoId { get; set; }
+    public string Registro { get; set; }
 }

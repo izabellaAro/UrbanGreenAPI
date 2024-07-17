@@ -16,4 +16,5 @@ public class CreateInspecaoDto
     [Required]
     public bool Colheita { get; set; }
     public int ProdutoId { get; set; }
+    public string Registro { get; set; }
 }

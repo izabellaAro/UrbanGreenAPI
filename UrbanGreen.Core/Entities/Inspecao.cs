@@ -1,4 +1,6 @@
-﻿namespace UrbanGreen.Core.Entities;
+﻿using Microsoft.Win32;
+
+namespace UrbanGreen.Core.Entities;
 
 public class Inspecao
 {
@@ -9,12 +11,13 @@ public class Inspecao
     public bool Irrigacao { get; set; }
     public bool CuidadoSolo { get; set; }
     public bool Colheita { get; set; }
+    public string Registro { get; set; }
     public int ProdutoId { get; set; }
     public virtual Produto Produto { get; set; }
 
     public Inspecao() { }
 
-    public Inspecao(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
+    public Inspecao(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, string registro, Produto produto, int produtoId)
     {
         Data = data;
         SelecaoSemente = selecaoSemente;
@@ -22,12 +25,13 @@ public class Inspecao
         Irrigacao = irrigacao;
         CuidadoSolo = cuidadoSolo;
         Colheita = colheita;
+        Registro = registro;
         Produto = produto;
         ProdutoId = produtoId;
 
     }
 
-    public void Update(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, Produto produto, int produtoId)
+    public void Update(DateTime data, bool selecaoSemente, bool controlePragas, bool irrigacao, bool cuidadoSolo, bool colheita, string registro, Produto produto, int produtoId)
     {
         Data = data;
         SelecaoSemente = selecaoSemente;
@@ -35,6 +39,7 @@ public class Inspecao
         Irrigacao = irrigacao;
         CuidadoSolo = cuidadoSolo;
         Colheita = colheita;
+        Registro = registro;
         Produto = produto;
         ProdutoId = produtoId;
     }

@@ -17,4 +17,5 @@ public class UpdateInspecaoDto
     public bool Colheita { get; set; }
     [Required]
     public int ProdutoId { get; set; }
+    public string Registro { get; set; }
 }

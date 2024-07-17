@@ -208,6 +208,10 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Registro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("SelecaoSemente")
                         .HasColumnType("bit");
 
