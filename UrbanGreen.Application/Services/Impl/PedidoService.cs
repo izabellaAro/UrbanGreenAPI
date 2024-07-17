@@ -1,4 +1,5 @@
-﻿using UrbanGreen.Application.Models.Pedido;
+﻿using UrbanGreen.Application.Models.ItemPedido;
+using UrbanGreen.Application.Models.Pedido;
 using UrbanGreen.Application.Services.Interfaces;
 using UrbanGreen.Core.Entities;
 using UrbanGreen.DataAcess.Repositories.Interfaces;
@@ -29,7 +30,7 @@ public class PedidoService : IPedidoService
             if (pedido == null || itemPedido == null) return false;
             List<int> itensPedidos = new List<int>();
             itensPedidos.Add(itemPedido.Id);
-            pedido.Update(pedidoDto.Data, itensPedidos);
+            pedido.Update(pedidoDto.Data);
             await _pedidoRepository.UpdateAsync(pedido);
            
         }
@@ -38,7 +39,7 @@ public class PedidoService : IPedidoService
 
     public async Task CadastrarPedido(CreatePedidoDto pedidoDto)
     {
-        var itensPedidos = new List<int>();
+        var itensPedidos = new List<ItemPedido>();
         double valorTotal = 0;
 
         foreach (var item in pedidoDto.ItensPedidoIds)
@@ -50,20 +51,17 @@ public class PedidoService : IPedidoService
             }
 
             var produto = await _produtoRepository.ConsultarProdutoPorID(itemPedido.ProdutoId);
+
             valorTotal += CalcularValorTotal(produto.Valor, itemPedido.Quantidade);
 
-            itensPedidos.Add(itemPedido.Id);
+            itensPedidos.Add(itemPedido);
         }
 
-        var pedido = new Pedido(pedidoDto.Data, pedidoDto.NomeComprador, itensPedidos, valorTotal);
-        await _pedidoRepository.AddAsync(pedido);
-
-        foreach (var item in pedidoDto.ItensPedidoIds)
+        var pedido = new Pedido(pedidoDto.Data, pedidoDto.NomeComprador, valorTotal)
         {
-            var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(item);
-            itemPedido.Update(itemPedido.Quantidade, itemPedido.Produto, itemPedido.ProdutoId, pedido.Id);
-            await _itemPedidoRepository.UpdateAsync(itemPedido);
-        }
+            ItemPedidos = itensPedidos
+        };
+        await _pedidoRepository.AddAsync(pedido);
     }
 
     public double CalcularValorTotal(double valor, int quantidade)
@@ -114,15 +112,19 @@ public class PedidoService : IPedidoService
     public async Task<IEnumerable<ReadPedidoDto>> ListarItens()
     {
         var pedidos = await _pedidoRepository.GetAllAsync();
-        return pedidos.Select(pedido => new ReadPedidoDto
+        var readPedidos = pedidos.Select(pedido => new ReadPedidoDto
         {
             Id = pedido.Id,
             Data = pedido.Data,
             NomeComprador = pedido.NomeComprador,
             ValorTotal = pedido.ValorTotal,
-            //NomeProduto = pedido.ItemPedido.Produto.Nome,
-            //QuantidadeProduto = pedido.ItemPedido.Produto.Quantidade
-
+            ItemPedidos = pedido.ItemPedidos.Select(item => new ReadItemPedidoDto
+            {
+                NomeProduto = item.Produto.Nome,
+                Quantidade = item.Quantidade
+            }).ToList()
         }).ToList();
+
+        return readPedidos;
     }
 }

@@ -13,11 +13,13 @@ public class ItemPedidoRepository : BaseRepository<ItemPedido>, IItemPedidoRepos
 
     public async Task<IEnumerable<ItemPedido>> ConsultarItemPedido(int skip, int take)
     {
-        return await _dbSet.Skip(skip).Take(take).ToListAsync();
+        return await _dbSet.Include(p => p.Produto)
+            .Skip(skip).Take(take).ToListAsync();
     }
 
     public async Task<ItemPedido> ConsultarItemPedidoPorID(int id)
     {
-        return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+        return await _dbSet.Include(p => p.Produto)
+           .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

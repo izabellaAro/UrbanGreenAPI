@@ -233,6 +233,9 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.Property<int>("IdPedido")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PedidoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
@@ -242,6 +245,8 @@ namespace UrbanGreen.DataAcess.Migrations
                         .HasDefaultValue(1);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
 
                     b.HasIndex("ProdutoId");
 
@@ -258,10 +263,6 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ItemPedidoId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeComprador")
                         .HasColumnType("nvarchar(max)");
@@ -512,6 +513,10 @@ namespace UrbanGreen.DataAcess.Migrations
 
             modelBuilder.Entity("UrbanGreen.Core.Entities.ItemPedido", b =>
                 {
+                    b.HasOne("UrbanGreen.Core.Entities.Pedido", null)
+                        .WithMany("ItemPedidos")
+                        .HasForeignKey("PedidoId");
+
                     b.HasOne("UrbanGreen.Core.Entities.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
@@ -519,6 +524,11 @@ namespace UrbanGreen.DataAcess.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("UrbanGreen.Core.Entities.Pedido", b =>
+                {
+                    b.Navigation("ItemPedidos");
                 });
 #pragma warning restore 612, 618
         }

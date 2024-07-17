@@ -6,23 +6,25 @@ public class Pedido
     public DateTime Data { get; set; }
     public string? NomeComprador { get; set; }
     public double ValorTotal { get; set; }
-    public List<int> ItemPedidoId { get; set; }
+    public ICollection<ItemPedido> ItemPedidos {  get; set; } 
+   // public List<int> ItemPedidoId { get; set; }
 
     public Pedido() 
     {
+        ItemPedidos = new List<ItemPedido>();
     }
 
-    public Pedido(DateTime data, string? nomeComprador, List<int> itemPedidoId, double valorTotal)
+    public Pedido(DateTime data, string? nomeComprador, double valorTotal)
     {
         Data = data;
         NomeComprador = nomeComprador;
-        ItemPedidoId = itemPedidoId;
+        ItemPedidos = new List<ItemPedido>();
         ValorTotal = valorTotal;
     }
 
-        public void Update(DateTime data, List<int> itemPedidoId)
+        public void Update(DateTime data)
         {
             Data = data;
-            ItemPedidoId = itemPedidoId;
+          //  ItemPedidoId = itemPedidoId;
     }
 }

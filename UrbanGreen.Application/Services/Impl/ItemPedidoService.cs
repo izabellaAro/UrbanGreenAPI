@@ -36,7 +36,7 @@ public class ItemPedidoService : IItemPedidoService
             throw new Exception("Produto não encontrado.");
         }
 
-        var itemPedido = new ItemPedido(produto, ItemPedidoDto.Quantidade, produto.Id);
+        var itemPedido = new ItemPedido(produto, ItemPedidoDto.Quantidade);
         
         await _itemPedidoRepository.AddAsync(itemPedido);
 

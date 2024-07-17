@@ -6,22 +6,19 @@ public class ItemPedido
     public int ProdutoId { get; set; }
     public virtual Produto Produto { get; set; }
     public int Quantidade { get; set; }
-    public int IdPedido { get; set; }
     
     public ItemPedido() { }
 
-    public ItemPedido(Produto produto, int quantidade, int produtoId) 
+    public ItemPedido(Produto produto, int quantidade) 
     {
         Produto = produto;
-        ProdutoId = produtoId;
         Quantidade = quantidade;
     }
 
-    public void Update(int quantidade, Produto produto, int produtoId, int pedidoId)
+    public void Update(int quantidade, Produto produto, int produtoId)
     {
         Quantidade = quantidade;
         Produto = produto;
         ProdutoId = produtoId;
-        IdPedido = pedidoId;
     }
 }

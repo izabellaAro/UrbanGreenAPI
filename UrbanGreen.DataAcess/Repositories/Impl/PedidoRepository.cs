@@ -23,6 +23,7 @@ public class PedidoRepository : BaseRepository<Pedido>, IPedidoRepository
     public async Task<IEnumerable<Pedido>> GetAllAsync()
     {
         return await _context.Pedidos
+            .Include(p => p.ItemPedidos)
             .ToListAsync();
     }
 }

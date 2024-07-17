@@ -1,4 +1,6 @@
-﻿namespace UrbanGreen.Application.Models.Pedido;
+﻿using UrbanGreen.Application.Models.ItemPedido;
+
+namespace UrbanGreen.Application.Models.Pedido;
 
 public class ReadPedidoDto
 {
@@ -8,5 +10,5 @@ public class ReadPedidoDto
     public string NomeProduto {get;set;}
     public int QuantidadeProduto { get; set; }
     public double ValorTotal { get; set; }
-    public int ItemPedidoId { get; set; }
+    public List<ReadItemPedidoDto> ItemPedidos { get; set; }
 }
