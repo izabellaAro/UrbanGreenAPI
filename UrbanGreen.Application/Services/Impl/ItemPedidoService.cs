@@ -1,4 +1,5 @@
-﻿using UrbanGreen.Application.Models.ItemPedido;
+﻿using UrbanGreen.Application.Models.FornecedorDto;
+using UrbanGreen.Application.Models.ItemPedido;
 using UrbanGreen.Application.Services.Interfaces;
 using UrbanGreen.Core.Entities;
 using UrbanGreen.DataAcess.Repositories.Interfaces;
@@ -41,9 +42,16 @@ public class ItemPedidoService : IItemPedidoService
 
     }
 
-    public Task<IEnumerable<ReadItemPedidoDto>> ConsultarItemPedido(int skip = 0, int take = 20)
+    public async Task<IEnumerable<ReadItemPedidoDto>> ConsultarItemPedido(int skip = 0, int take = 20)
     {
-        throw new NotImplementedException();
+        var consultaItemPedido = await _itemPedidoRepository.ConsultarItemPedido(skip, take);
+
+        return consultaItemPedido.Select(itemPedido => new ReadItemPedidoDto
+        {
+            Id = itemPedido.Id,
+            Quantidade = itemPedido.Quantidade,
+            ProdutoId = itemPedido.ProdutoId
+        }).ToList();
     }
 
     public async Task<ReadItemPedidoDto> ConsultarItemPedidoPorID(int id)

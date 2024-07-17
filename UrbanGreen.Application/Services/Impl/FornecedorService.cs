@@ -51,7 +51,9 @@ public class FornecedorService : IFornecedorService
             FornecedorId = fornecedorID.FornecedorId,
             Nome = fornecedorID.Nome,
             PessoaJuridicaId = fornecedorID.PessoaJuridicaId,
-            InsumoId = fornecedorID.InsumoId
+            InsumoId = fornecedorID.InsumoId,
+            NomePJ = fornecedorID.PessoaJuridica.NomeFantasia,
+            Insumo = fornecedorID.Insumo.Nome
         };
     }
 
@@ -62,7 +64,11 @@ public class FornecedorService : IFornecedorService
         return consultaFornecedor.Select(fornecedor => new ReadFornecedorDto
         {
             FornecedorId = fornecedor.FornecedorId,
-            Nome = fornecedor.Nome
+            Nome = fornecedor.Nome,
+            PessoaJuridicaId= fornecedor.PessoaJuridicaId,
+            InsumoId = fornecedor.InsumoId,
+            NomePJ = fornecedor.PessoaJuridica.NomeFantasia,
+            Insumo = fornecedor.Insumo.Nome
         }).ToList();
     }
 

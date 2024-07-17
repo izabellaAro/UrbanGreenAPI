@@ -12,11 +12,19 @@ public class FornecedorRepository : BaseRepository<Fornecedor>, IFornecedorRepos
     }
     public async Task<IEnumerable<Fornecedor>> ConsultarFornecedor(int skip, int take)
     {
-        return await _dbSet.Skip(skip).Take(take).ToListAsync();
+        return await _dbSet
+            .Include(f => f.Insumo)
+            .Include(f => f.PessoaJuridica)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
     }
 
     public async Task<Fornecedor> ConsultarFornecedorPorID(int id)
     {
-        return await _dbSet.FirstOrDefaultAsync(x => x.FornecedorId == id);
+        return await _dbSet
+        .Include(f => f.Insumo)
+        .Include(f => f.PessoaJuridica)
+        .FirstOrDefaultAsync(x => x.FornecedorId == id);
     }
 }
