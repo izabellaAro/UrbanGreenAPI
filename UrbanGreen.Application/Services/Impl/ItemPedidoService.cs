@@ -22,7 +22,11 @@ public class ItemPedidoService : IItemPedidoService
     {
         var produto = await _produtoRepository.ConsultarProdutoPorID(ItemPedidoDto.ProdutoId);
         var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(id);
-        if (itemPedido == null || produto == null) return false;
+        
+        if (itemPedido == null || produto == null) 
+            return false;
+
+        itemPedido.Update(itemPedido.Quantidade, produto, itemPedido.ProdutoId);
         await _itemPedidoRepository.UpdateAsync(itemPedido);
         return true;
     }
@@ -50,7 +54,8 @@ public class ItemPedidoService : IItemPedidoService
         {
             Id = itemPedido.Id,
             Quantidade = itemPedido.Quantidade,
-            ProdutoId = itemPedido.ProdutoId
+            ProdutoId = itemPedido.ProdutoId,
+            NomeProduto = itemPedido.Produto.Nome
         }).ToList();
     }
 
@@ -64,7 +69,8 @@ public class ItemPedidoService : IItemPedidoService
         {
             Id = itemPedidoID.Id,
             Quantidade = itemPedidoID.Quantidade,
-            ProdutoId = itemPedidoID.ProdutoId
+            ProdutoId = itemPedidoID.ProdutoId,
+            NomeProduto = itemPedidoID.Produto.Nome
         };
     }
 

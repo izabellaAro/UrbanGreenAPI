@@ -13,5 +13,9 @@ public class PedidoConfiguration : IEntityTypeConfiguration<Pedido>
         builder.Property(x => x.Data)
             .IsRequired();
 
+        //builder.HasMany(p => p.ItemPedidos)
+        //        .WithOne(ip => ip.Pedido)
+        //        .HasForeignKey(ip => ip.Id)
+        //        .OnDelete(DeleteBehavior.Cascade);
     }
 }

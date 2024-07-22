@@ -74,33 +74,44 @@ public class PedidoService : IPedidoService
     {
         var consultaPedido = await _pedidoRepository.ConsultarPedido(skip, take);
 
-        return consultaPedido.Select(pedido => new ReadPedidoDto
+    return consultaPedido.Select(pedido => new ReadPedidoDto
+    {
+        Id = pedido.Id,
+        Data = pedido.Data,
+        NomeComprador = pedido.NomeComprador,
+        ValorTotal = pedido.ValorTotal,
+        ItemPedidos = pedido.ItemPedidos.Select(itemPedido => new ReadItemPedidoDto
+        {
+            Id = itemPedido.Id,
+            Quantidade = itemPedido.Quantidade,
+            ProdutoId = itemPedido.ProdutoId,
+            NomeProduto = itemPedido.Produto.Nome
+        }).ToList()
+    }).ToList();
+    }
+
+    public async Task<ReadPedidoDto> ConsultarPedidoPorID(int id)
+    {
+        var pedido = await _pedidoRepository.ConsultarPedidoPorID(id);
+
+        if (pedido == null) return null;
+
+        var readPedidoDto = new ReadPedidoDto
         {
             Id = pedido.Id,
             Data = pedido.Data,
             NomeComprador = pedido.NomeComprador,
             ValorTotal = pedido.ValorTotal,
-        }).ToList();
-    }
-
-    public async Task<ReadPedidoDto> ConsultarPedidoPorID(int id)
-    {
-        List<int> itensPedidos = new List<int>();
-        var pedidoID = await _pedidoRepository.ConsultarPedidoPorID(id);
-        itensPedidos.Add(pedidoID.Id);
-
-        var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(pedidoID.Id);
-        var produto = await _produtoRepository.ConsultarProdutoPorID(itemPedido.ProdutoId);
-        if (pedidoID == null) return null;
-        return new ReadPedidoDto
-        {
-            Id = pedidoID.Id,
-            Data = pedidoID.Data,
-            NomeComprador = pedidoID.NomeComprador,
-            ValorTotal = pedidoID.ValorTotal,
-            NomeProduto = produto.Nome,
-            QuantidadeProduto = produto.Quantidade
+            ItemPedidos = pedido.ItemPedidos.Select(itemPedido => new ReadItemPedidoDto
+            {
+                Id = itemPedido.Id,
+                Quantidade = itemPedido.Quantidade,
+                ProdutoId = itemPedido.ProdutoId,
+                NomeProduto = itemPedido.Produto.Nome 
+            }).ToList()
         };
+
+        return readPedidoDto;
     }
     public async Task<bool> DeletarPedido(int id)
     {

@@ -280,7 +280,6 @@ namespace UrbanGreen.DataAcess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProdutoId = table.Column<int>(type: "int", nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    IdPedido = table.Column<int>(type: "int", nullable: false),
                     PedidoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -296,7 +295,7 @@ namespace UrbanGreen.DataAcess.Migrations
                         column: x => x.ProdutoId,
                         principalTable: "Produto",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
