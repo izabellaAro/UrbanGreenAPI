@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Models.Inspecao;
 using UrbanGreen.Application.Services.Interfaces;
 
@@ -15,6 +16,7 @@ public class InspecaoController : ControllerBase
         _inspecaoService = inspecaoService;
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPost]
     public async Task<IActionResult> CadastrarInspecao([FromBody] CreateInspecaoDto inspecaoDto)
     {
@@ -22,12 +24,14 @@ public class InspecaoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet]
     public async Task<IEnumerable<ReadInspecaoDto>> ConsultarInspecao([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         return await _inspecaoService.ConsultarInspecao(skip, take);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ConsultarInspecaoPorID(int id)
     {
@@ -36,6 +40,7 @@ public class InspecaoController : ControllerBase
         return Ok(inspecao);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarInspecao(int id, [FromBody] UpdateInspecaoDto inspecaoDto)
     {
@@ -44,6 +49,7 @@ public class InspecaoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarInspecao(int id)
     {

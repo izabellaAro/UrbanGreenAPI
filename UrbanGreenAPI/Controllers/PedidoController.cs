@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Models.Pedido;
 using UrbanGreen.Application.Services.Interfaces;
 
@@ -17,6 +18,7 @@ public class PedidoController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPost]
     public async Task<IActionResult> CadastrarPedido([FromBody] CreatePedidoDto pedidoDto)
     {
@@ -37,12 +39,14 @@ public class PedidoController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet]
     public async Task<IEnumerable<ReadPedidoDto>> ConsultarPedido([FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
         return await _pedidoService.ConsultarPedido(skip, take);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ConsultarPedidoPorID(int id)
     {
@@ -51,6 +55,7 @@ public class PedidoController : ControllerBase
         return Ok(pedido);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarPedido(int id, [FromBody] UpdatePedidoDto pedidoDto)
     {
@@ -59,6 +64,7 @@ public class PedidoController : ControllerBase
         return Ok(pedidoAtualizado);
     }
 
+    [Authorize(Roles = "Gerente, Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarPedido(int id)
     {
@@ -66,6 +72,8 @@ public class PedidoController : ControllerBase
         if (pedido == false) return NotFound();
         return NoContent();
     }
+
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("listarItens")]
     public async Task<IActionResult> ListarItens()
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Interface;
 using UrbanGreen.Application.Models.FornecedorDto;
 using UrbanGreen.Application.Services.Interfaces;
@@ -19,6 +20,8 @@ public class FornecedorController : ControllerBase
         _pessoaJuridicaService = pessoaJuridicaService;
         _insumoService = insumoService;
     }
+
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpPost]
     public async Task<IActionResult> CadastrarFornecedor([FromBody] CreateFornecedorDto fornecedorDto)
     {
@@ -33,12 +36,14 @@ public class FornecedorController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet]
     public async Task<IEnumerable<ReadFornecedorDto>> ConsultarFornecedor([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         return await _fornecedorService.ConsultarFornecedor(skip, take);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ConsultarFornecedorPorID(int id)
     {
@@ -47,6 +52,7 @@ public class FornecedorController : ControllerBase
         return Ok(fornecedor);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFornecedor(int id, [FromBody] UpdateFornecedorDto fornecedorDto)
     {
@@ -55,6 +61,7 @@ public class FornecedorController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarFornecedor(int id)
     {

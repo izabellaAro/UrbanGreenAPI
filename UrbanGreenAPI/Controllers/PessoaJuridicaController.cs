@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Models.PessoaJuridica;
 using UrbanGreen.Application.Services.Interfaces;
 
@@ -15,6 +16,7 @@ public class PessoaJuridicaController : ControllerBase
         _pessoaJuridicaService = pessoaJuridicaservice;
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpPost]
     public async Task<IActionResult> CadastrarPJ([FromBody] CreatePessoaJuridicaDto pessoaJuridicaDto)
     {
@@ -22,12 +24,14 @@ public class PessoaJuridicaController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet]
     public async Task<IEnumerable<ReadPessoaJuridicaDto>> ConsultarPJ([FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
         return await _pessoaJuridicaService.ConsultarPJ(skip, take);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ConsultarPJPorID(int id)
     {
@@ -36,6 +40,7 @@ public class PessoaJuridicaController : ControllerBase
         return Ok(pessoaJuridica);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarPJ(int id, [FromBody] UpdatePessoaJuridicaDto pessoaJuridicaDto)
     {
@@ -44,6 +49,7 @@ public class PessoaJuridicaController : ControllerBase
         return Ok(pjAtualizado);
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarPJ(int id)
     {

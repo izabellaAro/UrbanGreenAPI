@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Models.Insumo;
 using UrbanGreen.Application.Services.Interfaces;
 
@@ -15,6 +16,7 @@ public class InsumoController : ControllerBase
         _insumoService = insumoService;
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpPost]
     public async Task<IActionResult> CadastrarInsumo([FromBody] CreateInsumoDto insumoDto)
     {
@@ -22,12 +24,14 @@ public class InsumoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet]
     public async Task<IEnumerable<ReadInsumoDto>> ConsultarInsumos([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         return await _insumoService.ConsultarInsumos(skip, take);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ConsultarInsumoPorID(int id)
     {
@@ -36,6 +40,7 @@ public class InsumoController : ControllerBase
         return Ok(insumo);
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarInsumo(int id, [FromBody] UpdateInsumoDto insumoDto)
     {
@@ -44,6 +49,7 @@ public class InsumoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarInsumo(int id)
     {

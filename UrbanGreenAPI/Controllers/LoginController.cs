@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,11 +16,13 @@ public class LoginController : ControllerBase
 {
     private readonly UserManager<Usuario> _userManager;
     private readonly SignInManager<Usuario> _signInManager;
+    private readonly IConfiguration _configuration;
 
-    public LoginController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager)
+    public LoginController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -31,11 +34,12 @@ public class LoginController : ControllerBase
             return Unauthorized();
 
         var user = await _userManager.FindByNameAsync(model.NomeUsuario);
-        var token = GerarJwtToken(user);
+        var token = await GerarJwtToken(user);
 
         return Ok(new { token });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("registro")]
     public async Task<IActionResult> Registrar([FromBody] RegistroNovoUsuario model)
     {
@@ -60,6 +64,7 @@ public class LoginController : ControllerBase
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
 
@@ -68,17 +73,16 @@ public class LoginController : ControllerBase
             claims.Add(new Claim(ClaimTypes.Role, role));
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("V0zfDZXA476u9ApWjaDGJzLGerNcuuu9"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: "UrbanGreenAPIIssuer",
-            audience: "UrbanGreenAPIAudience",
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(300),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-
 }

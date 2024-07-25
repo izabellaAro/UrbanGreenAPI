@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Models.Produto;
 using UrbanGreen.Application.Services.Interfaces;
 
@@ -15,6 +16,7 @@ public class ProdutoController : ControllerBase
         _produtoService = produtoService;
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpPost]
     public async Task<IActionResult> CadastrarProduto([FromForm] CreateProdutoDto produtoDto)
     {
@@ -22,12 +24,14 @@ public class ProdutoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet]
     public async Task<IEnumerable<ReadProdutoDto>> ConsultarProdutos([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         return await _produtoService.ConsultarProdutos(skip, take);
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ConsultarProdutoPorID(int id)
     {
@@ -36,6 +40,7 @@ public class ProdutoController : ControllerBase
         return Ok(produto);
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarProduto(int id, [FromForm] UpdateProdutoDto produtoDto)
     {
@@ -44,6 +49,7 @@ public class ProdutoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarProduto(int id)
     {
@@ -52,6 +58,7 @@ public class ProdutoController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpGet("{id}/imagem")]
     public async Task<IActionResult> ObterImagemProduto(int id)
     {

@@ -2,19 +2,17 @@
 
 namespace UrbanGreen.Application.Services.Impl;
 
-public class RoleService
+public static class RoleService
 {
     public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
     {
-        string[] roleNames = { "Admin", "Gerente", "User" };
-        IdentityResult roleResult;
+        var roles = new[] { "Admin", "Gerente", "User" };
 
-        foreach (var roleName in roleNames)
+        foreach (var role in roles)
         {
-            var roleExist = await roleManager.RoleExistsAsync(roleName);
-            if (!roleExist)
+            if (!await roleManager.RoleExistsAsync(role))
             {
-                roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+                await roleManager.CreateAsync(new IdentityRole(role));
             }
         }
     }
