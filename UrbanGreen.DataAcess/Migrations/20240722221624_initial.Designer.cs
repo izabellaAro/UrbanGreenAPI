@@ -12,7 +12,7 @@ using UrbanGreen.DataAcess.Persistence;
 namespace UrbanGreen.DataAcess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240717215907_initial")]
+    [Migration("20240722221624_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -232,9 +232,6 @@ namespace UrbanGreen.DataAcess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("IdPedido")
-                        .HasColumnType("int");
 
                     b.Property<int?>("PedidoId")
                         .HasColumnType("int");
@@ -523,7 +520,7 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.HasOne("UrbanGreen.Core.Entities.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Produto");

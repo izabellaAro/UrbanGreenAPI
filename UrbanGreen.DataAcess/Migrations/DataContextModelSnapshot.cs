@@ -230,9 +230,6 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("IdPedido")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PedidoId")
                         .HasColumnType("int");
 
@@ -520,7 +517,7 @@ namespace UrbanGreen.DataAcess.Migrations
                     b.HasOne("UrbanGreen.Core.Entities.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Produto");
