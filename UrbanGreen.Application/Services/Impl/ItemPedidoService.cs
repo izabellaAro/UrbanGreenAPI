@@ -1,4 +1,4 @@
-﻿using UrbanGreen.Application.Models.FornecedorDto;
+﻿using UrbanGreen.Application.Models.Fornecedor;
 using UrbanGreen.Application.Models.ItemPedido;
 using UrbanGreen.Application.Services.Interfaces;
 using UrbanGreen.Core.Entities;

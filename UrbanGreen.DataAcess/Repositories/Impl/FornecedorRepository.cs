@@ -27,4 +27,5 @@ public class FornecedorRepository : BaseRepository<Fornecedor>, IFornecedorRepos
         .Include(f => f.PessoaJuridica)
         .FirstOrDefaultAsync(x => x.FornecedorId == id);
     }
+
 }

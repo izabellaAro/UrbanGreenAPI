@@ -1,4 +1,4 @@
-﻿namespace UrbanGreen.Application.Models.FornecedorDto;
+﻿namespace UrbanGreen.Application.Models.Fornecedor;
 
 public class ReadFornecedorDto
 {
@@ -8,4 +8,7 @@ public class ReadFornecedorDto
     public int InsumoId { get; set; }
     public string NomePJ { get; set; }
     public string Insumo {  get; set; }
+    public string Telefone { get; set; }
+    public string Email { get; set; }
+    public double Valor {  get; set; }
 }

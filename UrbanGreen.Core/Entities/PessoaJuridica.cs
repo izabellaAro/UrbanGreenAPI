@@ -20,6 +20,13 @@ public class PessoaJuridica
         Telefone = telefone;
     }
 
+    //atualizacao de fornecedor
+    public void Update(string email, string telefone)
+    {
+        Email = email;
+        Telefone = telefone;
+    }
+
     public void Update(string nomeFantasia, string cnpj, string razaoSocial, string email, string telefone)
     {
         NomeFantasia = nomeFantasia;

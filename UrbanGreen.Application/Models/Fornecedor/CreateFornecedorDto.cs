@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using UrbanGreen.Application.Models.PessoaJuridica;
 
-namespace UrbanGreen.Application.Models.FornecedorDto;
+namespace UrbanGreen.Application.Models.Fornecedor;
 
-public class CreateFornecedorDto
+public record CreateFornecedorDto
 {
     [Required(ErrorMessage = "O nome do Fornecedor é obrigatório")]
-    public string Nome { get; set; }
+    public string Nome { get; init; }
     [Required]
-    public int PessoaJuridicaId { get; set; }
-    [Required]
-    public int InsumoId { get; set; }
+    public int InsumoId { get; init; }
+    public CreatePessoaJuridicaDto PessoaJuridica { get; init; }
 }

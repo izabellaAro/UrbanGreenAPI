@@ -1,5 +1,5 @@
 ﻿using UrbanGreen.Application.Interface;
-using UrbanGreen.Application.Models.FornecedorDto;
+using UrbanGreen.Application.Models.Fornecedor;
 using UrbanGreen.Core.Entities;
 using UrbanGreen.DataAcess.Interface;
 using UrbanGreen.DataAcess.Repositories.Interfaces;
@@ -22,21 +22,22 @@ public class FornecedorService : IFornecedorService
     {
         var fornecedor = await _fornecedorRepository.ConsultarFornecedorPorID(id);
         if (fornecedor == null) return false;
-        fornecedor.Update(FornecedorDto.Nome);
+        fornecedor.Update(FornecedorDto.Nome, FornecedorDto.Email, FornecedorDto.Telefone);
         await _fornecedorRepository.UpdateAsync(fornecedor);
         return true;
     }
 
-    public async Task CadastrarFornecedor(CreateFornecedorDto FornecedorDto)
+    public async Task CadastrarFornecedor(CreateFornecedorDto fornecedorDto)
     {
-        var insumo = await _insumoRepository.ConsultarInsumoPorID(FornecedorDto.InsumoId);
-        var pessoaJuridica = await _pessoaJuridicaRepository.ConsultarPJPorID(FornecedorDto.PessoaJuridicaId);
+        var pessoaJuridicaDto = fornecedorDto.PessoaJuridica;
 
-        if (pessoaJuridica == null || insumo == null)
-        {
-            throw new Exception("Pessoa Jurídica ou insumo não encontrado.");
-        }
-        var fornecedor = new Fornecedor(FornecedorDto.Nome, pessoaJuridica, insumo, insumo.Id);
+        var insumo = await _insumoRepository.ConsultarInsumoPorID(fornecedorDto.InsumoId);
+
+        var pessoaJuridica = new PessoaJuridica(pessoaJuridicaDto.NomeFantasia, pessoaJuridicaDto.CNPJ, pessoaJuridicaDto.RazaoSocial,
+            pessoaJuridicaDto.Email, pessoaJuridicaDto.Telefone);
+
+        var fornecedor = new Fornecedor(fornecedorDto.Nome, insumo.Id, pessoaJuridica);
+
         await _fornecedorRepository.AddAsync(fornecedor);
     }
 
@@ -46,15 +47,18 @@ public class FornecedorService : IFornecedorService
 
         if (fornecedorID == null) return null;
 
-        return new ReadFornecedorDto
-        {
-            FornecedorId = fornecedorID.FornecedorId,
-            Nome = fornecedorID.Nome,
-            PessoaJuridicaId = fornecedorID.PessoaJuridicaId,
-            InsumoId = fornecedorID.InsumoId,
-            NomePJ = fornecedorID.PessoaJuridica.NomeFantasia,
-            Insumo = fornecedorID.Insumo.Nome
-        };
+             return new ReadFornecedorDto
+             {
+                 FornecedorId = fornecedorID.FornecedorId,
+                 Nome = fornecedorID.Nome,
+                 PessoaJuridicaId = fornecedorID.PessoaJuridicaId,
+                 InsumoId = fornecedorID.InsumoId,
+                 NomePJ = fornecedorID.PessoaJuridica.NomeFantasia,
+                 Insumo = fornecedorID.Insumo.Nome,
+                 Telefone = fornecedorID.PessoaJuridica.Telefone,
+                 Email = fornecedorID.PessoaJuridica.Email,
+                 Valor = fornecedorID.Insumo.Valor
+             };
     }
 
     public async Task<IEnumerable<ReadFornecedorDto>> ConsultarFornecedor(int skip = 0, int take = 20)
@@ -65,7 +69,7 @@ public class FornecedorService : IFornecedorService
         {
             FornecedorId = fornecedor.FornecedorId,
             Nome = fornecedor.Nome,
-            PessoaJuridicaId= fornecedor.PessoaJuridicaId,
+            PessoaJuridicaId = fornecedor.PessoaJuridicaId,
             InsumoId = fornecedor.InsumoId,
             NomePJ = fornecedor.PessoaJuridica.NomeFantasia,
             Insumo = fornecedor.Insumo.Nome

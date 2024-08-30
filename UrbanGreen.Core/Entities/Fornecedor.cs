@@ -13,17 +13,24 @@ public class Fornecedor
 
     public Fornecedor() { }
 
-    public Fornecedor(string nome, PessoaJuridica pessoaJuridica, Insumo insumo, int insumoId)
+    public Fornecedor(string nome, int insumoId, string nomeFantasia, string cnpj, string razaoSocial,
+        string email, string telefone)
     {
         Nome = nome;
-        PessoaJuridica = pessoaJuridica;
-        PessoaJuridicaId = pessoaJuridica.Id;
-        Insumo = insumo;
+        PessoaJuridica = new (nomeFantasia, cnpj, razaoSocial, email, telefone);
         InsumoId = insumoId;
     }
 
-    public void Update(string nome)
+    public Fornecedor(string nome, int insumoId, PessoaJuridica pessoaJuridica)
     {
         Nome = nome;
+        InsumoId = insumoId;
+        PessoaJuridica = pessoaJuridica;
+    }
+
+    public void Update(string nome, string email, string telefone)
+    {
+        Nome = nome;
+        PessoaJuridica.Update(email, telefone);
     }
 }

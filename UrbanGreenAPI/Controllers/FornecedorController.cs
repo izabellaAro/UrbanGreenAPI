@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UrbanGreen.Application.Interface;
-using UrbanGreen.Application.Models.FornecedorDto;
+using UrbanGreen.Application.Models.Fornecedor;
 using UrbanGreen.Application.Services.Interfaces;
 
 namespace UrbanGreenAPI.Controllers;

@@ -1,4 +1,4 @@
-﻿using UrbanGreen.Application.Models.FornecedorDto;
+﻿using UrbanGreen.Application.Models.Fornecedor;
 
 namespace UrbanGreen.Application.Interface;
 
