@@ -23,19 +23,31 @@ public class PedidoService : IPedidoService
 
     public async Task<bool> AtualizarPedido(int id, UpdatePedidoDto pedidoDto)
     {
-        foreach (var item in pedidoDto.ItensPedidoIds)
+        var pedido = await _pedidoRepository.ConsultarPedidoPorID(id);
+        if (pedido == null) return false;
+
+        double valorTotal = 0;
+        var itensPedidos = new List<ItemPedido>();
+
+        foreach (var itemId in pedidoDto.ItensPedidoIds)
         {
-            var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(item);
-            var pedido = await _pedidoRepository.ConsultarPedidoPorID(id);
-            if (pedido == null || itemPedido == null) return false;
-            List<int> itensPedidos = new List<int>();
-            itensPedidos.Add(itemPedido.Id);
-            pedido.Update(pedidoDto.Data);
-            await _pedidoRepository.UpdateAsync(pedido);
-           
+            var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(itemId);
+            if (itemPedido == null) return false;
+
+            itensPedidos.Add(itemPedido);
+
+            valorTotal += CalcularValorTotal(itemPedido.Produto.Valor, itemPedido.Quantidade);
         }
+
+        pedido.Update(pedidoDto.Data, pedidoDto.NomeComprador, valorTotal);
+        pedido.ItemPedidos = itensPedidos;
+
+        await _pedidoRepository.UpdateAsync(pedido);
+
         return true;
     }
+
+
 
     public async Task CadastrarPedido(CreatePedidoDto pedidoDto)
     {

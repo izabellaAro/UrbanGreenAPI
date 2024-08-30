@@ -26,7 +26,7 @@ public class ItemPedidoService : IItemPedidoService
         if (itemPedido == null || produto == null) 
             return false;
 
-        itemPedido.Update(itemPedido.Quantidade, produto, itemPedido.ProdutoId);
+        itemPedido.Update(ItemPedidoDto.Quantidade, produto, ItemPedidoDto.ProdutoId);
         await _itemPedidoRepository.UpdateAsync(itemPedido);
         return true;
     }

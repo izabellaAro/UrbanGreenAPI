@@ -1,4 +1,6 @@
-﻿namespace UrbanGreen.Core.Entities;
+﻿using System.Xml;
+
+namespace UrbanGreen.Core.Entities;
 
 public class Pedido
 {
@@ -7,14 +9,13 @@ public class Pedido
     public string? NomeComprador { get; set; }
     public double ValorTotal { get; set; }
     public ICollection<ItemPedido> ItemPedidos {  get; set; } 
-   // public List<int> ItemPedidoId { get; set; }
 
     public Pedido() 
     {
         ItemPedidos = new List<ItemPedido>();
     }
 
-    public Pedido(DateTime data, string? nomeComprador, double valorTotal)
+    public Pedido(DateTime data, string nomeComprador, double valorTotal)
     {
         Data = data;
         NomeComprador = nomeComprador;
@@ -22,9 +23,11 @@ public class Pedido
         ValorTotal = valorTotal;
     }
 
-        public void Update(DateTime data)
+        public void Update(DateTime data, string nomeComprador, double valorTotal)
         {
             Data = data;
-          //  ItemPedidoId = itemPedidoId;
+            NomeComprador = nomeComprador;
+            ItemPedidos = new List<ItemPedido>();
+            ValorTotal = valorTotal;
     }
 }
