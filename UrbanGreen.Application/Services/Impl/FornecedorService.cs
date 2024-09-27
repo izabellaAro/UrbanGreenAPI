@@ -72,7 +72,10 @@ public class FornecedorService : IFornecedorService
             PessoaJuridicaId = fornecedor.PessoaJuridicaId,
             InsumoId = fornecedor.InsumoId,
             NomePJ = fornecedor.PessoaJuridica.NomeFantasia,
-            Insumo = fornecedor.Insumo.Nome
+            Insumo = fornecedor.Insumo.Nome,
+            Telefone = fornecedor.PessoaJuridica.Telefone,
+            Email = fornecedor.PessoaJuridica.Email,
+            Valor = fornecedor.Insumo.Valor
         }).ToList();
     }
 
