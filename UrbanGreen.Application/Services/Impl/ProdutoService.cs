@@ -59,7 +59,7 @@ public class ProdutoService : IProdutoService
             Nome = produtoID.Nome,
             Quantidade = produtoID.Quantidade,
             Valor = produtoID.Valor,
-            ImagemUrl = produtoID.Imagem != null ? $"api/produto/{produtoID.Id}/imagem" : null
+            ImagemBase64 = produtoID.ImagemBase64
         };
     }
 
@@ -73,7 +73,7 @@ public class ProdutoService : IProdutoService
             Nome = produto.Nome,
             Quantidade = produto.Quantidade,
             Valor = produto.Valor,
-            ImagemUrl = produto.Imagem != null ? $"api/produto/{produto.Id}/imagem" : null
+            ImagemBase64 = produto.ImagemBase64
         }).ToList();
     }
 
@@ -85,9 +85,9 @@ public class ProdutoService : IProdutoService
         return true;
     }
 
-    public async Task<byte[]> ObterImagemProduto(int id)
+    public async Task<GetImagemProdutoDto> ObterImagemProduto(int id)
     {
         var produto = await _produtoRepository.ConsultarProdutoPorID(id);
-        return produto?.Imagem;
+        return new GetImagemProdutoDto(produto?.ImagemBase64);
     }
 }

@@ -63,7 +63,9 @@ public class ProdutoController : ControllerBase
     public async Task<IActionResult> ObterImagemProduto(int id)
     {
         var imagem = await _produtoService.ObterImagemProduto(id);
+
         if (imagem == null) return NotFound();
-        return File(imagem, "image/jpeg");
+
+        return Ok(imagem);
     }
 }

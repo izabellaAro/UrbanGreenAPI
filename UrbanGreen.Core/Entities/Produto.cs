@@ -7,6 +7,7 @@ public class Produto
     public int Quantidade { get; set; }
     public double Valor { get; set; }
     public byte[] Imagem { get; set; }
+    public string ImagemBase64 => Convert.ToBase64String(Imagem);
 
     public Produto() { }
     public Produto(string nome, int quantidade, double valor, byte[] imagem)

@@ -6,5 +6,5 @@ public class ReadProdutoDto
     public string Nome { get; set; }
     public int Quantidade { get; set; }
     public double Valor { get; set; }
-    public string ImagemUrl { get; set; }
+    public string? ImagemBase64 { get; set; }
 }
