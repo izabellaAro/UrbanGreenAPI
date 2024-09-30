@@ -64,6 +64,15 @@ public class PedidoService : IPedidoService
 
             var produto = await _produtoRepository.ConsultarProdutoPorID(itemPedido.ProdutoId);
 
+            if (produto.Quantidade <= itemPedido.Quantidade)
+            {
+                throw new Exception("Não temos essa quantidade de produto no estoque.");
+            }
+
+            int quantidadeAtualizada = itemPedido.Quantidade - produto.Quantidade;
+
+            produto.Update(produto.Nome, quantidadeAtualizada, produto.Valor, produto.Imagem);
+
             valorTotal += CalcularValorTotal(produto.Valor, itemPedido.Quantidade);
 
             itensPedidos.Add(itemPedido);
