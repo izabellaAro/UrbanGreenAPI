@@ -9,4 +9,5 @@ public interface IInspecaoService
     Task<ReadInspecaoDto> ConsultarInspecaoPorID(int id);
     Task<bool> AtualizarInspecao(int id, UpdateInspecaoDto inspecaoDto);
     Task<bool> DeletarInspecao(int id);
+    Task<IList<ReadTipoItensInspecaoDto>> ConsultarTiposItens();
 }

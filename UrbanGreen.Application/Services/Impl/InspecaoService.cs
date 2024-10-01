@@ -9,10 +9,13 @@ public class InspecaoService : IInspecaoService
 {
     private readonly IInspecaoRepository _inspecaoRepository;
     private readonly IProdutoRepository _produtoRepository;
-    public InspecaoService(IInspecaoRepository inspecaoRepository, IProdutoRepository produtoRepository)
+    private readonly ITipoItemInspecaoRepository _tipoItemInspecaoRepository;
+    public InspecaoService(IInspecaoRepository inspecaoRepository, IProdutoRepository produtoRepository,
+        ITipoItemInspecaoRepository tipoItemInspecaoRepository)
     {
         _inspecaoRepository = inspecaoRepository;
         _produtoRepository = produtoRepository;
+        _tipoItemInspecaoRepository = tipoItemInspecaoRepository;
     }
 
     public async Task<bool> AtualizarInspecao(int id, UpdateInspecaoDto inspecaoDto)
@@ -20,7 +23,12 @@ public class InspecaoService : IInspecaoService
         var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
         var inspecao = await _inspecaoRepository.ConsultarInspecaoPorID(id);
         if (inspecao == null || produto == null) return false;
-        inspecao.Update(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita,inspecaoDto.Registro, produto, produto.Id);
+
+        foreach (var item in inspecaoDto.Itens)
+        {
+            inspecao.Update(item.Data, item.TipoId, item.Realizado);
+        }
+
         await _inspecaoRepository.UpdateAsync(inspecao);
         return true;
     }
@@ -28,7 +36,14 @@ public class InspecaoService : IInspecaoService
     public async Task CadastrarInspecao(CreateInspecaoDto inspecaoDto)
     {
         var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
-        var inspecao = new Inspecao(inspecaoDto.Data, inspecaoDto.SelecaoSemente, inspecaoDto.ControlePragas, inspecaoDto.Irrigacao, inspecaoDto.CuidadoSolo, inspecaoDto.Colheita, inspecaoDto.Registro, produto, produto.Id);
+
+        var inspecao = new Inspecao(produto.Id);
+
+        foreach (var item in inspecaoDto.Itens)
+        {
+            inspecao.Update(item.Data, item.TipoId, item.Realizado);
+        }
+
         await _inspecaoRepository.AddAsync(inspecao);
     }
 
@@ -39,13 +54,9 @@ public class InspecaoService : IInspecaoService
         return consultaInspecao.Select(inspecao => new ReadInspecaoDto
         {
             Id = inspecao.Id,
-            Data = inspecao.Data,
-            SelecaoSemente = inspecao.SelecaoSemente,
-            ControlePragas = inspecao.ControlePragas,
-            Irrigacao = inspecao.Irrigacao,
-            CuidadoSolo = inspecao.CuidadoSolo,
-            Colheita = inspecao.Colheita,
-            Registro = inspecao.Registro,
+            Itens = inspecao.Itens
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado))
+                .ToList(),
             ProdutoId = inspecao.ProdutoId
         }).ToList();
     }
@@ -59,13 +70,9 @@ public class InspecaoService : IInspecaoService
         return new ReadInspecaoDto
         {
             Id = inspecaoID.Id,
-            Data = inspecaoID.Data,
-            SelecaoSemente = inspecaoID.SelecaoSemente,
-            ControlePragas = inspecaoID.ControlePragas,
-            Irrigacao = inspecaoID.Irrigacao,
-            CuidadoSolo = inspecaoID.CuidadoSolo,
-            Colheita = inspecaoID.Colheita,
-            Registro = inspecaoID.Registro,
+            Itens = inspecaoID.Itens
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado))
+                .ToList(),
             ProdutoId = inspecaoID.ProdutoId
         };
     }
@@ -76,5 +83,11 @@ public class InspecaoService : IInspecaoService
         if (inspecao == null) return false;
         await _inspecaoRepository.DeleteAsync(inspecao);
         return true;
+    }
+
+    public async Task<IList<ReadTipoItensInspecaoDto>> ConsultarTiposItens()
+    {
+        var itens = await _tipoItemInspecaoRepository.ConsultarItens();
+        return itens.Select(item => new ReadTipoItensInspecaoDto(item.Id, item.Nome)).ToList();
     }
 }

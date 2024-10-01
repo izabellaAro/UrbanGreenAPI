@@ -11,11 +11,17 @@ public class InspecaoRepository : BaseRepository<Inspecao>, IInspecaoRepository
 
     public async Task<IEnumerable<Inspecao>> ConsultarInspecao(int skip, int take)
     {
-        return await _dbSet.Skip(skip).Take(take).ToListAsync();
+        return await _dbSet
+            .Include(x => x.Itens)
+                .ThenInclude(x => x.TipoItemInspecao)
+            .Skip(skip).Take(take).ToListAsync();
     }
 
     public async Task<Inspecao> ConsultarInspecaoPorID(int id)
     {
-        return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+        return await _dbSet
+            .Include(x => x.Itens)
+                .ThenInclude(x => x.TipoItemInspecao)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

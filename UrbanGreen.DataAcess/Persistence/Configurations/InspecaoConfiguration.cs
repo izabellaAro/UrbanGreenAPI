@@ -13,19 +13,23 @@ internal class InspecaoConfiguration : IEntityTypeConfiguration<Inspecao>
         builder.Property(x => x.Data)
             .IsRequired();
 
-        builder.Property(x => x.SelecaoSemente)
-            .IsRequired();
+        builder.HasOne(x => x.Produto)
+            .WithOne(x => x.Inspecao)
+            .HasForeignKey<Inspecao>(x => x.ProdutoId);
 
-        builder.Property(x => x.ControlePragas)
-            .IsRequired();
+        //builder.Property(x => x.SelecaoSemente)
+        //    .IsRequired();
 
-        builder.Property(x => x.Irrigacao)
-            .IsRequired();
+        //builder.Property(x => x.ControlePragas)
+        //    .IsRequired();
 
-        builder.Property(x => x.CuidadoSolo)
-            .IsRequired();
+        //builder.Property(x => x.Irrigacao)
+        //    .IsRequired();
 
-        builder.Property(x => x.Colheita)
-            .IsRequired();
+        //builder.Property(x => x.CuidadoSolo)
+        //    .IsRequired();
+
+        //builder.Property(x => x.Colheita)
+        //    .IsRequired();
     }
 }

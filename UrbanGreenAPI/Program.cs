@@ -30,6 +30,7 @@ builder.Services.AddScoped<IInspecaoRepository, InspecaoRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
+builder.Services.AddScoped<ITipoItemInspecaoRepository, TipoItemInspecaoRepository>();
 
 builder.Services.AddScoped<IInsumoService, InsumoService>();
 builder.Services.AddScoped<IPessoaJuridicaService, PessoaJuridicaService>();

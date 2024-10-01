@@ -57,4 +57,13 @@ public class InspecaoController : ControllerBase
         if (inspecao == false) return NotFound();
         return NoContent();
     }
+
+    [Authorize(Roles = "Gerente,Admin,User")]
+    [HttpGet("tipos-itens")]
+    public async Task<IActionResult> ConsultarTiposItens()
+    {
+        var inspecao = await _inspecaoService.ConsultarTiposItens();
+        if (inspecao == null) return NotFound();
+        return Ok(inspecao);
+    }
 }
