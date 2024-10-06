@@ -37,6 +37,16 @@ public class InspecaoService : IInspecaoService
     {
         var produto = await _produtoRepository.ConsultarProdutoPorID(inspecaoDto.ProdutoId);
 
+        if (produto == null)
+        {
+            throw new Exception("Produto não encontrado.");
+        }
+
+        int quantidadeAtualizada = produto.Quantidade + inspecaoDto.QntColhida;
+
+        produto.Update(produto.Nome, quantidadeAtualizada, produto.Valor, produto.Imagem);
+        await _produtoRepository.UpdateAsync(produto);
+
         var inspecao = new Inspecao(produto.Id);
 
         foreach (var item in inspecaoDto.Itens)

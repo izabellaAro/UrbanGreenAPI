@@ -1,4 +1,6 @@
-﻿namespace UrbanGreen.Application.Models.Inspecao;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UrbanGreen.Application.Models.Inspecao;
 
 public class ReadInspecaoDto
 {
@@ -6,4 +8,5 @@ public class ReadInspecaoDto
     public int ProdutoId { get; set; }
     public string Registro { get; set; }
     public List<ReadItemInspecaoDto> Itens { get; set; }
+    public int QntColhida { get; set; }
 }
