@@ -26,7 +26,7 @@ public class InspecaoService : IInspecaoService
 
         foreach (var item in inspecaoDto.Itens)
         {
-            inspecao.Update(item.Data, item.TipoId, item.Realizado);
+            inspecao.Update(item.Data, item.TipoId, item.Realizado, inspecaoDto.Registro);
         }
 
         await _inspecaoRepository.UpdateAsync(inspecao);
@@ -51,7 +51,7 @@ public class InspecaoService : IInspecaoService
 
         foreach (var item in inspecaoDto.Itens)
         {
-            inspecao.Update(item.Data, item.TipoId, item.Realizado);
+            inspecao.Update(item.Data, item.TipoId, item.Realizado, inspecaoDto.Registro);
         }
 
         await _inspecaoRepository.AddAsync(inspecao);
@@ -64,8 +64,9 @@ public class InspecaoService : IInspecaoService
         return consultaInspecao.Select(inspecao => new ReadInspecaoDto
         {
             Id = inspecao.Id,
+            Registro = inspecao.Registro,
             Itens = inspecao.Itens
-                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado))
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado, item.TipoItemInspecaoId))
                 .ToList(),
             ProdutoId = inspecao.ProdutoId
         }).ToList();
@@ -80,8 +81,9 @@ public class InspecaoService : IInspecaoService
         return new ReadInspecaoDto
         {
             Id = inspecaoID.Id,
+            Registro = inspecaoID.Registro,
             Itens = inspecaoID.Itens
-                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado))
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado, item.TipoItemInspecaoId))
                 .ToList(),
             ProdutoId = inspecaoID.ProdutoId
         };

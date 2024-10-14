@@ -17,6 +17,8 @@ internal class InspecaoConfiguration : IEntityTypeConfiguration<Inspecao>
             .WithOne(x => x.Inspecao)
             .HasForeignKey<Inspecao>(x => x.ProdutoId);
 
+        builder.Property(x => x.Registro);
+
         //builder.Property(x => x.SelecaoSemente)
         //    .IsRequired();
 
