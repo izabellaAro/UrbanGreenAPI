@@ -24,4 +24,12 @@ public class InspecaoRepository : BaseRepository<Inspecao>, IInspecaoRepository
                 .ThenInclude(x => x.TipoItemInspecao)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
+
+    public async Task<Inspecao> ConsultarInspecaoPorProdutoId(int id)
+    {
+        return await _dbSet
+            .Include(x => x.Itens)
+                .ThenInclude(x => x.TipoItemInspecao)
+            .FirstOrDefaultAsync(x => x.ProdutoId == id);
+    }
 }

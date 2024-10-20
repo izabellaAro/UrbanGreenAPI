@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Win32;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace UrbanGreen.Core.Entities;
+﻿namespace UrbanGreen.Core.Entities;
 
 public class Inspecao
 {

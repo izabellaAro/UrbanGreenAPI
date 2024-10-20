@@ -93,6 +93,23 @@ public class InspecaoService : IInspecaoService
         };
     }
 
+    public async Task<ReadInspecaoDto> ConsultarInspecaoPorProdutoId(int id)
+    {
+        var inspecaoID = await _inspecaoRepository.ConsultarInspecaoPorProdutoId(id);
+
+        if (inspecaoID == null) return null;
+
+        return new ReadInspecaoDto
+        {
+            Id = inspecaoID.Id,
+            Registro = inspecaoID.Registro,
+            Itens = inspecaoID.Itens
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado, item.TipoItemInspecaoId))
+                .ToList(),
+            ProdutoId = inspecaoID.ProdutoId
+        };
+    }
+
     public async Task<bool> DeletarInspecao(int id)
     {
         var inspecao = await _inspecaoRepository.ConsultarInspecaoPorID(id);
