@@ -26,8 +26,10 @@ public class InspecaoService : IInspecaoService
 
         foreach (var item in inspecaoDto.Itens)
         {
-            inspecao.Update(item.Data, item.TipoId, item.Realizado, inspecaoDto.Registro);
+            inspecao.UpdateItem(item.Data, item.TipoId, item.Realizado);
         }
+
+        inspecao.UpdateRegistro(inspecaoDto.Registro);
 
         await _inspecaoRepository.UpdateAsync(inspecao);
         return true;
@@ -49,9 +51,11 @@ public class InspecaoService : IInspecaoService
 
         var inspecao = new Inspecao(produto.Id);
 
+        inspecao.UpdateRegistro(inspecaoDto.Registro);
+
         foreach (var item in inspecaoDto.Itens)
         {
-            inspecao.Update(item.Data, item.TipoId, item.Realizado, inspecaoDto.Registro);
+            inspecao.UpdateItem(item.Data, item.TipoId, item.Realizado);
         }
 
         await _inspecaoRepository.AddAsync(inspecao);

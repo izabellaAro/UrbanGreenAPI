@@ -13,7 +13,7 @@ public class Inspecao
 
     public int ProdutoId { get; set; }
     public virtual Produto Produto { get; set; }
-    public int  QntColhida { get; set; }
+    public int QntColhida { get; set; }
     public string Registro { get; set; }
 
     public Inspecao() { }
@@ -23,10 +23,8 @@ public class Inspecao
         ProdutoId = produtoId;
     }
 
-    public void Update(DateTime data, int tipoItemId, bool statusItem, string registro)
+    public void UpdateItem(DateTime data, int tipoItemId, bool statusItem)
     {
-        Registro = registro;
-
         var item = Itens.FirstOrDefault(x => x.TipoItemInspecaoId == tipoItemId);
 
         if (item == null)
@@ -36,5 +34,10 @@ public class Inspecao
         }
 
         item.Update(data, statusItem);
+    }
+
+    public void UpdateRegistro(string registro)
+    {
+        Registro = registro;
     }
 }
