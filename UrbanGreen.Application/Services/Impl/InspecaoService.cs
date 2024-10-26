@@ -26,8 +26,10 @@ public class InspecaoService : IInspecaoService
 
         foreach (var item in inspecaoDto.Itens)
         {
-            inspecao.Update(item.Data, item.TipoId, item.Realizado);
+            inspecao.UpdateItem(item.Data, item.TipoId, item.Realizado);
         }
+
+        inspecao.AtualizarComplementos(inspecaoDto.Registro, inspecaoDto.QntColhida);
 
         await _inspecaoRepository.UpdateAsync(inspecao);
         return true;
@@ -51,8 +53,10 @@ public class InspecaoService : IInspecaoService
 
         foreach (var item in inspecaoDto.Itens)
         {
-            inspecao.Update(item.Data, item.TipoId, item.Realizado);
+            inspecao.UpdateItem(item.Data, item.TipoId, item.Realizado);
         }
+
+        inspecao.AtualizarComplementos(inspecaoDto.Registro, inspecaoDto.QntColhida);
 
         await _inspecaoRepository.AddAsync(inspecao);
     }
@@ -64,8 +68,9 @@ public class InspecaoService : IInspecaoService
         return consultaInspecao.Select(inspecao => new ReadInspecaoDto
         {
             Id = inspecao.Id,
+            Registro = inspecao.Registro,
             Itens = inspecao.Itens
-                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado))
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado, item.TipoItemInspecaoId))
                 .ToList(),
             ProdutoId = inspecao.ProdutoId
         }).ToList();
@@ -80,8 +85,26 @@ public class InspecaoService : IInspecaoService
         return new ReadInspecaoDto
         {
             Id = inspecaoID.Id,
+            Registro = inspecaoID.Registro,
             Itens = inspecaoID.Itens
-                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado))
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado, item.TipoItemInspecaoId))
+                .ToList(),
+            ProdutoId = inspecaoID.ProdutoId
+        };
+    }
+
+    public async Task<ReadInspecaoDto> ConsultarInspecaoPorProdutoId(int id)
+    {
+        var inspecaoID = await _inspecaoRepository.ConsultarInspecaoAtivaPorProdutoId(id);
+
+        if (inspecaoID == null) return null;
+
+        return new ReadInspecaoDto
+        {
+            Id = inspecaoID.Id,
+            Registro = inspecaoID.Registro,
+            Itens = inspecaoID.Itens
+                .Select(item => new ReadItemInspecaoDto(item.Data, item.TipoItemInspecao.Nome, item.Realizado, item.TipoItemInspecaoId))
                 .ToList(),
             ProdutoId = inspecaoID.ProdutoId
         };

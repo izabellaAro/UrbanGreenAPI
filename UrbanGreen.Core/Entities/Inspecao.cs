@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Win32;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace UrbanGreen.Core.Entities;
+﻿namespace UrbanGreen.Core.Entities;
 
 public class Inspecao
 {
@@ -13,16 +9,29 @@ public class Inspecao
 
     public int ProdutoId { get; set; }
     public virtual Produto Produto { get; set; }
-    public int  QntColhida { get; set; }
+    public int QntColhida { get; set; }
+    public string Registro { get; set; }
+    public bool Ativa { get; private set; }
 
     public Inspecao() { }
 
     public Inspecao(int produtoId)
     {
         ProdutoId = produtoId;
+        Ativa = true;
     }
 
-    public void Update(DateTime data, int tipoItemId, bool statusItem)
+    private void UpdateRegistro(string registro) => Registro = registro;
+
+    private bool PossuiTodosItensRealizados() => Itens.All(x => x.Realizado);
+
+    private void Concluir(int qntColhida)
+    {
+        QntColhida = qntColhida;
+        Ativa = false;
+    }
+
+    public void UpdateItem(DateTime data, int tipoItemId, bool statusItem)
     {
         var item = Itens.FirstOrDefault(x => x.TipoItemInspecaoId == tipoItemId);
 
@@ -33,5 +42,15 @@ public class Inspecao
         }
 
         item.Update(data, statusItem);
+    }
+
+    public void AtualizarComplementos(string registro, int qntColhida)
+    {
+        UpdateRegistro(registro);
+
+        if (PossuiTodosItensRealizados())
+        {
+            Concluir(qntColhida);
+        }
     }
 }

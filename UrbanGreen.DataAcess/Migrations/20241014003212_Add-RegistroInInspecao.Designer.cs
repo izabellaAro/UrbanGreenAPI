@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UrbanGreen.DataAcess.Persistence;
 
@@ -11,9 +12,11 @@ using UrbanGreen.DataAcess.Persistence;
 namespace UrbanGreen.DataAcess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241014003212_Add-RegistroInInspecao")]
+    partial class AddRegistroInInspecao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,11 +193,6 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Ativa")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
@@ -210,7 +208,8 @@ namespace UrbanGreen.DataAcess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProdutoId");
+                    b.HasIndex("ProdutoId")
+                        .IsUnique();
 
                     b.ToTable("Inspecoes");
                 });
@@ -539,8 +538,8 @@ namespace UrbanGreen.DataAcess.Migrations
             modelBuilder.Entity("UrbanGreen.Core.Entities.Inspecao", b =>
                 {
                     b.HasOne("UrbanGreen.Core.Entities.Produto", "Produto")
-                        .WithMany("Inspecoes")
-                        .HasForeignKey("ProdutoId")
+                        .WithOne("Inspecao")
+                        .HasForeignKey("UrbanGreen.Core.Entities.Inspecao", "ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -593,7 +592,8 @@ namespace UrbanGreen.DataAcess.Migrations
 
             modelBuilder.Entity("UrbanGreen.Core.Entities.Produto", b =>
                 {
-                    b.Navigation("Inspecoes");
+                    b.Navigation("Inspecao")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

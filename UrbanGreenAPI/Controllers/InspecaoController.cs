@@ -41,6 +41,15 @@ public class InspecaoController : ControllerBase
     }
 
     [Authorize(Roles = "Gerente,Admin,User")]
+    [HttpGet("produto/{id}")]
+    public async Task<IActionResult> ConsultarInspecaoPorProdutoId(int id)
+    {
+        var inspecao = await _inspecaoService.ConsultarInspecaoPorProdutoId(id);
+        if (inspecao == null) return NotFound();
+        return Ok(inspecao);
+    }
+
+    [Authorize(Roles = "Gerente,Admin,User")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarInspecao(int id, [FromBody] UpdateInspecaoDto inspecaoDto)
     {

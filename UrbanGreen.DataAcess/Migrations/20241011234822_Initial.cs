@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UrbanGreen.DataAcess.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -111,6 +111,19 @@ namespace UrbanGreen.DataAcess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Produto", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TipoItemInspecao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TipoItemInspecao", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -252,13 +265,8 @@ namespace UrbanGreen.DataAcess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SelecaoSemente = table.Column<bool>(type: "bit", nullable: false),
-                    ControlePragas = table.Column<bool>(type: "bit", nullable: false),
-                    Irrigacao = table.Column<bool>(type: "bit", nullable: false),
-                    CuidadoSolo = table.Column<bool>(type: "bit", nullable: false),
-                    Colheita = table.Column<bool>(type: "bit", nullable: false),
-                    Registro = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProdutoId = table.Column<int>(type: "int", nullable: false),
+                    QntColhida = table.Column<int>(type: "int", nullable: false),
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -296,6 +304,34 @@ namespace UrbanGreen.DataAcess.Migrations
                         principalTable: "Produto",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemInspecao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Realizado = table.Column<bool>(type: "bit", nullable: false),
+                    TipoItemInspecaoId = table.Column<int>(type: "int", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InspecaoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemInspecao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemInspecao_Inspecoes_InspecaoId",
+                        column: x => x.InspecaoId,
+                        principalTable: "Inspecoes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItemInspecao_TipoItemInspecao_TipoItemInspecaoId",
+                        column: x => x.TipoItemInspecaoId,
+                        principalTable: "TipoItemInspecao",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -350,7 +386,18 @@ namespace UrbanGreen.DataAcess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Inspecoes_ProdutoId",
                 table: "Inspecoes",
-                column: "ProdutoId");
+                column: "ProdutoId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemInspecao_InspecaoId",
+                table: "ItemInspecao",
+                column: "InspecaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemInspecao_TipoItemInspecaoId",
+                table: "ItemInspecao",
+                column: "TipoItemInspecaoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItensPedidos_PedidoId",
@@ -385,7 +432,7 @@ namespace UrbanGreen.DataAcess.Migrations
                 name: "Fornecedores");
 
             migrationBuilder.DropTable(
-                name: "Inspecoes");
+                name: "ItemInspecao");
 
             migrationBuilder.DropTable(
                 name: "ItensPedidos");
@@ -401,6 +448,12 @@ namespace UrbanGreen.DataAcess.Migrations
 
             migrationBuilder.DropTable(
                 name: "PessoaJuridica");
+
+            migrationBuilder.DropTable(
+                name: "Inspecoes");
+
+            migrationBuilder.DropTable(
+                name: "TipoItemInspecao");
 
             migrationBuilder.DropTable(
                 name: "Pedidos");

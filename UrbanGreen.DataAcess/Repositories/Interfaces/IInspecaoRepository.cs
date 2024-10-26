@@ -6,4 +6,5 @@ public interface IInspecaoRepository : IBaseRepository<Inspecao>
 {
     Task<IEnumerable<Inspecao>> ConsultarInspecao(int skip, int take);
     Task<Inspecao> ConsultarInspecaoPorID(int id);
+    Task<Inspecao> ConsultarInspecaoAtivaPorProdutoId(int id);
 }

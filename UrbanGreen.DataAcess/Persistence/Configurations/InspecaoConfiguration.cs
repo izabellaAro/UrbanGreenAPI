@@ -14,8 +14,12 @@ internal class InspecaoConfiguration : IEntityTypeConfiguration<Inspecao>
             .IsRequired();
 
         builder.HasOne(x => x.Produto)
-            .WithOne(x => x.Inspecao)
-            .HasForeignKey<Inspecao>(x => x.ProdutoId);
+            .WithMany(x => x.Inspecoes)
+            .HasForeignKey(x => x.ProdutoId);
+
+        builder.Property(x => x.Registro);
+
+        builder.Property(x => x.Ativa).HasDefaultValue(true);
 
         //builder.Property(x => x.SelecaoSemente)
         //    .IsRequired();

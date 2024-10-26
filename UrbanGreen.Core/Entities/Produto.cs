@@ -8,9 +8,10 @@ public class Produto
     public double Valor { get; set; }
     public byte[] Imagem { get; set; }
     public string ImagemBase64 => Convert.ToBase64String(Imagem);
-    public Inspecao Inspecao { get; private set; } = new Inspecao();
+    public IEnumerable<Inspecao> Inspecoes { get; private set; } = new List<Inspecao>();
 
     public Produto() { }
+
     public Produto(string nome, int quantidade, double valor, byte[] imagem)
     {
         Nome = nome;
