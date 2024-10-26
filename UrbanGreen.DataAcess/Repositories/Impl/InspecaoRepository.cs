@@ -25,11 +25,11 @@ public class InspecaoRepository : BaseRepository<Inspecao>, IInspecaoRepository
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<Inspecao> ConsultarInspecaoPorProdutoId(int id)
+    public async Task<Inspecao> ConsultarInspecaoAtivaPorProdutoId(int id)
     {
         return await _dbSet
             .Include(x => x.Itens)
                 .ThenInclude(x => x.TipoItemInspecao)
-            .FirstOrDefaultAsync(x => x.ProdutoId == id);
+            .FirstOrDefaultAsync(x => x.ProdutoId == id && x.Ativa);
     }
 }

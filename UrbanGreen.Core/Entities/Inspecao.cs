@@ -11,12 +11,24 @@ public class Inspecao
     public virtual Produto Produto { get; set; }
     public int QntColhida { get; set; }
     public string Registro { get; set; }
+    public bool Ativa { get; private set; }
 
     public Inspecao() { }
 
     public Inspecao(int produtoId)
     {
         ProdutoId = produtoId;
+        Ativa = true;
+    }
+
+    private void UpdateRegistro(string registro) => Registro = registro;
+
+    private bool PossuiTodosItensRealizados() => Itens.All(x => x.Realizado);
+
+    private void Concluir(int qntColhida)
+    {
+        QntColhida = qntColhida;
+        Ativa = false;
     }
 
     public void UpdateItem(DateTime data, int tipoItemId, bool statusItem)
@@ -32,8 +44,13 @@ public class Inspecao
         item.Update(data, statusItem);
     }
 
-    public void UpdateRegistro(string registro)
+    public void AtualizarComplementos(string registro, int qntColhida)
     {
-        Registro = registro;
+        UpdateRegistro(registro);
+
+        if (PossuiTodosItensRealizados())
+        {
+            Concluir(qntColhida);
+        }
     }
 }

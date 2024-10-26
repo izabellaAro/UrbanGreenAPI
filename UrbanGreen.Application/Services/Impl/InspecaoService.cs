@@ -29,7 +29,7 @@ public class InspecaoService : IInspecaoService
             inspecao.UpdateItem(item.Data, item.TipoId, item.Realizado);
         }
 
-        inspecao.UpdateRegistro(inspecaoDto.Registro);
+        inspecao.AtualizarComplementos(inspecaoDto.Registro, inspecaoDto.QntColhida);
 
         await _inspecaoRepository.UpdateAsync(inspecao);
         return true;
@@ -51,12 +51,12 @@ public class InspecaoService : IInspecaoService
 
         var inspecao = new Inspecao(produto.Id);
 
-        inspecao.UpdateRegistro(inspecaoDto.Registro);
-
         foreach (var item in inspecaoDto.Itens)
         {
             inspecao.UpdateItem(item.Data, item.TipoId, item.Realizado);
         }
+
+        inspecao.AtualizarComplementos(inspecaoDto.Registro, inspecaoDto.QntColhida);
 
         await _inspecaoRepository.AddAsync(inspecao);
     }
@@ -95,7 +95,7 @@ public class InspecaoService : IInspecaoService
 
     public async Task<ReadInspecaoDto> ConsultarInspecaoPorProdutoId(int id)
     {
-        var inspecaoID = await _inspecaoRepository.ConsultarInspecaoPorProdutoId(id);
+        var inspecaoID = await _inspecaoRepository.ConsultarInspecaoAtivaPorProdutoId(id);
 
         if (inspecaoID == null) return null;
 
