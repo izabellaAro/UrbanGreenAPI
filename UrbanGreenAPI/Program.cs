@@ -29,7 +29,6 @@ builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();
 builder.Services.AddScoped<IInspecaoRepository, InspecaoRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
-builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
 builder.Services.AddScoped<ITipoItemInspecaoRepository, TipoItemInspecaoRepository>();
 
 builder.Services.AddScoped<IInsumoService, InsumoService>();
@@ -38,7 +37,6 @@ builder.Services.AddScoped<IFornecedorService, FornecedorService>();
 builder.Services.AddScoped<IInspecaoService, InspecaoService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
-builder.Services.AddScoped<IItemPedidoService, ItemPedidoService>();
 
 builder.Services.AddControllers();
 

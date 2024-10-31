@@ -28,5 +28,7 @@ public class Produto
         Imagem = imagem;
     }
 
-    public void AdicionarQuantidade(int quantidade) => Quantidade = quantidade;
+    public void AumentarEstoque(int quantidade) => Quantidade = quantidade;
+
+    public void DiminuirEstoque(int quantidade) => Quantidade -= quantidade;
 }
