@@ -27,4 +27,6 @@ public class Produto
         Valor = valor;
         Imagem = imagem;
     }
+
+    public void AdicionarQuantidade(int quantidade) => Quantidade = quantidade;
 }
