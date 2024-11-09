@@ -60,7 +60,8 @@ public class PedidoService : IPedidoService
             Id = itemPedido.Id,
             Quantidade = itemPedido.Quantidade,
             ProdutoId = itemPedido.ProdutoId,
-            NomeProduto = itemPedido.Produto.Nome
+            NomeProduto = itemPedido.Produto.Nome,
+            Valor = itemPedido.Produto.Valor
         }).ToList()
     }).ToList();
     }
