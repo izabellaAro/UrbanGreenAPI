@@ -25,7 +25,7 @@ public class LoginController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpPost("login")]
+    [HttpPost]
     public async Task<IActionResult> Login([FromBody] Login model)
     {
         var result = await _signInManager.PasswordSignInAsync(model.NomeUsuario, model.Senha, false, false);
@@ -56,6 +56,7 @@ public class LoginController : ControllerBase
 
         return Ok();
     }
+
     [Authorize(Roles = "Admin")]
     [HttpGet("usuarios")]
     public async Task<IActionResult> ObterUsuarios()
@@ -86,6 +87,7 @@ public class LoginController : ControllerBase
             user.Email
         });
     }
+
     [Authorize(Roles = "Admin")]
     [HttpPut("usuarios/{id}")]
     public async Task<IActionResult> EditarUsuario(string id, [FromBody] UpdateUsuarioDto model)
@@ -114,6 +116,7 @@ public class LoginController : ControllerBase
 
         return Ok();
     }
+
     [Authorize(Roles = "Admin")]
     [HttpDelete("usuarios/{id}")]
     public async Task<IActionResult> ExcluirUsuario(string id)
@@ -130,8 +133,6 @@ public class LoginController : ControllerBase
 
         return Ok();
     }
-
-
 
     private async Task<string> GerarJwtToken(Usuario user)
     {
