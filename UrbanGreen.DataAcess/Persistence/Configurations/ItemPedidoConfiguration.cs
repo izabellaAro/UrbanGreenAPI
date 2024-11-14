@@ -17,14 +17,12 @@ internal class ItemPedidoConfiguration : IEntityTypeConfiguration<ItemPedido>
         builder.Property(ip => ip.ProdutoId)
             .IsRequired();
 
+        builder.Property(x => x.ValorProduto);
+        builder.Ignore(x => x.ValorTotal);
+
         builder.HasOne(ip => ip.Produto)
             .WithMany()
             .HasForeignKey(ip => ip.ProdutoId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        //builder.HasOne(ip => ip.Pedido)
-        //    .WithMany(p => p.ItemPedidos)
-        //    .HasForeignKey(ip => ip.PedidoId)
-        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

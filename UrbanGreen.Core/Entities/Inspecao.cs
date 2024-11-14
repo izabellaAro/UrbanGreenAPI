@@ -29,6 +29,7 @@ public class Inspecao
     {
         QntColhida = qntColhida;
         Ativa = false;
+        Produto.AumentarEstoque(qntColhida);
     }
 
     public void UpdateItem(DateTime data, int tipoItemId, bool statusItem)

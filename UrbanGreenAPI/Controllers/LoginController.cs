@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using UrbanGreen.Application.Models.Usuario;
-using UrbanGreen.Core.Entities;
+using UrbanGreen.Application.Services.Interfaces;
 
 namespace UrbanGreenAPI.Controllers;
 
@@ -14,151 +9,81 @@ namespace UrbanGreenAPI.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
-    private readonly UserManager<Usuario> _userManager;
-    private readonly SignInManager<Usuario> _signInManager;
-    private readonly IConfiguration _configuration;
+    private readonly IUsuarioService _usuarioService;
 
-    public LoginController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, IConfiguration configuration)
+    public LoginController(IUsuarioService usuarioService)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _configuration = configuration;
+        _usuarioService = usuarioService;
     }
 
-    [HttpPost("login")]
+    [HttpPost]
     public async Task<IActionResult> Login([FromBody] Login model)
     {
-        var result = await _signInManager.PasswordSignInAsync(model.NomeUsuario, model.Senha, false, false);
+        var result = await _usuarioService.Login(model);
 
-        if (!result.Succeeded)
+        if (result == null)
             return Unauthorized();
 
-        var user = await _userManager.FindByNameAsync(model.NomeUsuario);
-        var token = await GerarJwtToken(user);
-
-        return Ok(new { token });
+        return Ok(result);
     }
 
     [Authorize(Roles = "Admin")]
     [HttpPost("registro")]
     public async Task<IActionResult> Registrar([FromBody] RegistroNovoUsuario model)
     {
-        var user = new Usuario { UserName = model.NomeUsuario, Email = model.Email };
-        var result = await _userManager.CreateAsync(user, model.Senha);
+        var success = await _usuarioService.Registrar(model);
 
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        if (!string.IsNullOrEmpty(model.Role))
-        {
-            await _userManager.AddToRoleAsync(user, model.Role);
-        }
+        if (!success)
+            return BadRequest();
 
         return Ok();
     }
+
     [Authorize(Roles = "Admin")]
     [HttpGet("usuarios")]
     public async Task<IActionResult> ObterUsuarios()
     {
-        var usuarios = _userManager.Users.Select(user => new
-        {
-            user.Id,
-            user.UserName,
-            user.Email
-        }).ToList();
+        var result = await _usuarioService.ListarUsuarios();
 
-        return Ok(usuarios);
+        return Ok(result);
     }
 
     [Authorize(Roles = "Admin")]
     [HttpGet("usuarios/{id}")]
     public async Task<IActionResult> ObterUsuarioPorId(string id)
-    {
-        var user = await _userManager.FindByIdAsync(id);
+        => Ok(await _usuarioService.ObterUsuarioPorId(id));
 
-        if (user == null)
-            return NotFound();
-
-        return Ok(new
-        {
-            user.Id,
-            user.UserName,
-            user.Email
-        });
-    }
     [Authorize(Roles = "Admin")]
     [HttpPut("usuarios/{id}")]
     public async Task<IActionResult> EditarUsuario(string id, [FromBody] UpdateUsuarioDto model)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var success = await _usuarioService.EditarUsuario(id, model);
 
-        if (user == null)
+        if (!success.HasValue)
             return NotFound();
 
-        user.UserName = model.NomeUsuario;
-        user.Email = model.Email;
-
-        var result = await _userManager.UpdateAsync(user);
-
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        if (!string.IsNullOrEmpty(model.NovaSenha))
-        {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var passwordResult = await _userManager.ResetPasswordAsync(user, token, model.NovaSenha);
-
-            if (!passwordResult.Succeeded)
-                return BadRequest(passwordResult.Errors);
-        }
+        if (!success.Value)
+            return BadRequest();
 
         return Ok();
     }
+
     [Authorize(Roles = "Admin")]
     [HttpDelete("usuarios/{id}")]
     public async Task<IActionResult> ExcluirUsuario(string id)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var success = await _usuarioService.ExcluirUsuario(id);
 
-        if (user == null)
+        if (!success.HasValue)
             return NotFound();
 
-        var result = await _userManager.DeleteAsync(user);
-
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
+        if (!success.Value)
+            return BadRequest();
 
         return Ok();
     }
 
-
-
-    private async Task<string> GerarJwtToken(Usuario user)
-    {
-        var userRoles = await _userManager.GetRolesAsync(user);
-
-        var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
-        };
-
-        foreach (var role in userRoles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(300),
-            signingCredentials: creds);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+    [HttpGet("me")]
+    public async Task<IActionResult> GetCurrentUser()
+        => Ok(await _usuarioService.GetCurrentUser(User));
 }

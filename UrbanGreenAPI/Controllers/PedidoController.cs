@@ -55,15 +55,6 @@ public class PedidoController : ControllerBase
         return Ok(pedido);
     }
 
-    [Authorize(Roles = "Gerente,Admin,User")]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarPedido(int id, [FromBody] UpdatePedidoDto pedidoDto)
-    {
-        var pedidoAtualizado = await _pedidoService.AtualizarPedido(id, pedidoDto);
-        if (pedidoAtualizado == false) return NotFound();
-        return Ok(pedidoAtualizado);
-    }
-
     [Authorize(Roles = "Gerente, Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarPedido(int id)

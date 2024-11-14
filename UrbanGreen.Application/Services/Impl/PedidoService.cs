@@ -9,79 +9,33 @@ namespace UrbanGreen.Application.Services.Impl;
 public class PedidoService : IPedidoService
 {
     private readonly IPedidoRepository _pedidoRepository;
-    private readonly IItemPedidoRepository _itemPedidoRepository;
     private readonly IProdutoRepository _produtoRepository;
 
-
-    public PedidoService(IPedidoRepository pedidoRepository, IItemPedidoRepository itemPedidoRepository, IProdutoRepository produtoRepository)
+    public PedidoService(IPedidoRepository pedidoRepository, IProdutoRepository produtoRepository)
     {
         _pedidoRepository = pedidoRepository;
-        _itemPedidoRepository = itemPedidoRepository;
         _produtoRepository = produtoRepository;
 
     }
 
-    public async Task<bool> AtualizarPedido(int id, UpdatePedidoDto pedidoDto)
-    {
-        var pedido = await _pedidoRepository.ConsultarPedidoPorID(id);
-        if (pedido == null) return false;
-
-        double valorTotal = 0;
-        var itensPedidos = new List<ItemPedido>();
-
-        foreach (var itemId in pedidoDto.ItensPedidoIds)
-        {
-            var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(itemId);
-            if (itemPedido == null) return false;
-
-            itensPedidos.Add(itemPedido);
-
-            valorTotal += CalcularValorTotal(itemPedido.Produto.Valor, itemPedido.Quantidade);
-        }
-
-        pedido.Update(pedidoDto.Data, pedidoDto.NomeComprador, valorTotal);
-        pedido.ItemPedidos = itensPedidos;
-
-        await _pedidoRepository.UpdateAsync(pedido);
-
-        return true;
-    }
-
-
-
     public async Task CadastrarPedido(CreatePedidoDto pedidoDto)
     {
-        var itensPedidos = new List<ItemPedido>();
-        double valorTotal = 0;
+        var pedido = new Pedido(pedidoDto.NomeComprador);
 
-        foreach (var item in pedidoDto.ItensPedidoIds)
+        foreach (var item in pedidoDto.ItensPedido)
         {
-            var itemPedido = await _itemPedidoRepository.ConsultarItemPedidoPorID(item);
-            if (itemPedido == null)
-            {
-                throw new Exception("Item pedido não encontrado.");
-            }
+            var produto = await _produtoRepository.ConsultarProdutoPorID(item.ProdutoId);
 
-            var produto = await _produtoRepository.ConsultarProdutoPorID(itemPedido.ProdutoId);
-
-            if (produto.Quantidade <= itemPedido.Quantidade)
+            if (produto.Quantidade <= item.Quantidade)
             {
                 throw new Exception("Não temos essa quantidade de produto no estoque.");
             }
 
-            int quantidadeAtualizada = itemPedido.Quantidade - produto.Quantidade;
-
-            produto.Update(produto.Nome, quantidadeAtualizada, produto.Valor, produto.Imagem);
-
-            valorTotal += CalcularValorTotal(produto.Valor, itemPedido.Quantidade);
-
-            itensPedidos.Add(itemPedido);
+            var itemPedido = new ItemPedido(produto, item.Quantidade);
+            produto.DiminuirEstoque(itemPedido.Quantidade);
+            pedido.AdicionarItem(itemPedido);
         }
 
-        var pedido = new Pedido(pedidoDto.Data, pedidoDto.NomeComprador, valorTotal)
-        {
-            ItemPedidos = itensPedidos
-        };
         await _pedidoRepository.AddAsync(pedido);
     }
 
@@ -106,7 +60,8 @@ public class PedidoService : IPedidoService
             Id = itemPedido.Id,
             Quantidade = itemPedido.Quantidade,
             ProdutoId = itemPedido.ProdutoId,
-            NomeProduto = itemPedido.Produto.Nome
+            NomeProduto = itemPedido.Produto.Nome,
+            Valor = itemPedido.Produto.Valor
         }).ToList()
     }).ToList();
     }

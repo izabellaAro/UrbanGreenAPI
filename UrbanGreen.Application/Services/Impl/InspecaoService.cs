@@ -44,11 +44,6 @@ public class InspecaoService : IInspecaoService
             throw new Exception("Produto não encontrado.");
         }
 
-        int quantidadeAtualizada = produto.Quantidade + inspecaoDto.QntColhida;
-
-        produto.Update(produto.Nome, quantidadeAtualizada, produto.Valor, produto.Imagem);
-        await _produtoRepository.UpdateAsync(produto);
-
         var inspecao = new Inspecao(produto.Id);
 
         foreach (var item in inspecaoDto.Itens)
@@ -59,6 +54,7 @@ public class InspecaoService : IInspecaoService
         inspecao.AtualizarComplementos(inspecaoDto.Registro, inspecaoDto.QntColhida);
 
         await _inspecaoRepository.AddAsync(inspecao);
+        await _produtoRepository.UpdateAsync(produto);
     }
 
     public async Task<IEnumerable<ReadInspecaoDto>> ConsultarInspecao(int skip = 0, int take = 20)

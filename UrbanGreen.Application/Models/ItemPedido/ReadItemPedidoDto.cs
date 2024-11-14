@@ -6,4 +6,5 @@ public class ReadItemPedidoDto
     public int Quantidade { get; set; }
     public int ProdutoId { get; set; }
     public string NomeProduto { get; set; }
+    public double Valor { get; set; }
 }
